@@ -106,7 +106,8 @@ void draw(){
       fill(0,255,100);
       text(Integer.toString(userList[i]),com2d.x,com2d.y);
       
-      println("X: " + com2d.x);
+      //println("X: " + com2d.x);
+      println("Z: " + com.z);
     //  println("mouse: " + mouseX/ bar_width);
     }
   }
@@ -136,7 +137,14 @@ void drawTv( int bars_nr) {
   int bar_width = width / bars_nr +1;
   // en funcion de la posicion x del mouse definimos cual de las barras de colores no se dibujara
   //int whichBar = (int)(mouseX / bar_width);
-  int whichBar = (int)((1280-(com2d.x*2)) / bar_width);
+    
+    int whichBar = -1;
+    if (com.z >= 2500){
+      whichBar = (int)((1280-(com2d.x*2)) / bar_width);
+    }
+    else if(com.z <= 2500){
+      whichBar = (int)((1280-(com2d.x*1.8)) / bar_width); 
+    }
 
   // dibujamos las barras
   for (int i = 0; i < bars_nr; i ++) {
