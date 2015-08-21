@@ -4,7 +4,7 @@ public class ControlFrame extends PApplet {
   int w, h;
   ControlP5 cp5;
   Object parent;
-  
+
   public void setup() {
     size(w, h);
     frameRate(25);
@@ -20,11 +20,11 @@ public class ControlFrame extends PApplet {
                 .setSpacingColumn(30)
                 .setSpacingRow(20)
                 .addItem("Pelotitas", 50);
-                
+
      sliderPelotitas =  cp5.addSlider("Numero de Pelotitas")
       .plugTo(parent,"num")
       .setRange(1, 20)
-      .setPosition(10,140);          
+      .setPosition(10,140);
   }
   public void draw() {
     background(0);
@@ -33,8 +33,8 @@ public class ControlFrame extends PApplet {
   }
   public ControlFrame(Object theParent, int theWidth, int theHeight) {
     parent = theParent;
-    w = theWidth;
-    h = theHeight;
+    w      = theWidth;
+    h      = theHeight;
   }
   public ControlP5 control() {
     return cp5;
