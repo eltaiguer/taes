@@ -26,6 +26,21 @@ color[] color_bars={
   color(0,0,192)
 };
 
+//*****PELOTAS*********//
+int maxBalls = 15;
+int numBalls = 1;
+float spring = 0.05;
+float gravity = 0.03;
+float friction = -0.9;
+Ball[] balls = new Ball[maxBalls];
+boolean animateBalls;
+//*****PELOTAS*********//
+
+//*****PELOTAS*********//
+CheckBox checkboxPelotitas;
+Slider sliderPelotitas;
+//*****PELOTAS*********//
+
 // aca se guarda el nro total de los colores definidos
 int colorsNr = color_bars.length;
 
@@ -59,11 +74,28 @@ void setup(){
 
  // context.enableRGB();
 
+   //*****PELOTAS*********//
+  animateBalls = false;
+  
+  
+  for (int i = 0; i < maxBalls; i++) {
+    balls[i] = new Ball(random(width), random(height), random(30, 70), i, balls);
+  }
+ //******PELOTAS********//   
 
 };
 
 // esta funcion se ejecuta todo el tiempo en un loop constante
 void draw(){
+
+  //******PELOTAS********//
+  //Pregunto si hay que dibujar pelotitas
+  animateBalls = checkboxPelotitas.getState("Pelotitas");
+
+  numBalls = (int)sliderPelotitas.getValue();
+  //******PELOTAS********//
+  
+  
   // la funcion que creamos para dibujar el fondo ruidoso
   createNoisyBackground();
   // la funcion que dibuja las barras de colores
@@ -154,10 +186,29 @@ void drawTv( int bars_nr) {
       fill(color_bars[i%colorsNr]);
       // dibujamos el rectangulo
       rect(i * bar_width, 0, bar_width, height);
+	  
+	    //*****PELOTAS*********//
+      if (animateBalls && numBalls >= 1){
+         drawBalls(); 
+      }
+      //*****PELOTAS*********//
     }
   }
 }
 
+//******* PELOTAS *******//
+void drawBalls(){
+  int iter = 1;
+  for (Ball ball : balls) {
+    if (iter <= numBalls) {
+      ball.collide();
+      ball.move();
+      ball.display();
+      iter++;  
+    }
+  }
+}
+//******PELOTAS********//
 
 //mas kinect
 
