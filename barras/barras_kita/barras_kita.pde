@@ -6,6 +6,12 @@ private ControlP5 cp5;
 
 SimpleOpenNI  context;
 
+// Booleano para invertir 
+boolean inv = false;
+
+// Bars alpha
+int alpha = 180;
+
 color[]       userClr = new color[]{ color(255,0,0),
                                      color(0,255,0),
                                      color(0,0,255),
@@ -50,6 +56,8 @@ boolean toSwitch = true;
 //*****PELOTAS*********//
 CheckBox checkboxPelotitas;
 Slider sliderPelotitas;
+Toggle invToggle;
+Slider alphaSlider;
 //*****PELOTAS*********//
 
 // aca se guarda el nro total de los colores definidos
@@ -113,8 +121,11 @@ void draw(){
   createNoisyBackground();
   // la funcion que dibuja las barras de colores
   // le pasamos la cantidad de barras que queremos dibujar
-  drawTv(colorsNr);
-//image(context.rgbImage(), 0, 0);
+  if (invToggle.getState()){
+    drawTvInvertido(colorsNr);
+  }else{
+    drawTv(colorsNr);
+  }
 
   //cosas kinect
   // update the cam
@@ -177,30 +188,59 @@ void createNoisyBackground(){
 
 
 void drawTv( int bars_nr) {
-  // definimos el ancho de las barras
+  // definimos el ancho de las barras 
   // por el tema del redondeo hacemos +1 para cubrir toda la pantalla
   int bar_width = width / bars_nr +1;
   // en funcion de la posicion x del mouse definimos cual de las barras de colores no se dibujara
-  //int whichBar = (int)(mouseX / bar_width);
-
-    int whichBar = -1;
-    if (com.z >= 2500){
-      whichBar = (int)((1280-(com2d.x*2)) / bar_width);
-    }
-    else if(com.z <= 2500){
-      whichBar = (int)((1280-(com2d.x*1.8)) / bar_width);
-    }
+  int whichBar = -1;
+  if (com.z >= 2500){
+    whichBar = (int)((1280-(com2d.x*2)) / bar_width);
+  }
+  else if(com.z <= 2500){
+    whichBar = (int)((1280-(com2d.x*1.8)) / bar_width);
+  }
 
   // dibujamos las barras
   for (int i = 0; i < bars_nr; i ++) {
     // dibujamos solo si el mouse no esta parado en esta barra
     if(whichBar != i) {
       // el color de la barra se corresponde a un color definido en el array color_bars[]
-      fill(color_bars[i%colorsNr]);
+      fill(color_bars[i%colorsNr],(int)alphaSlider.getValue());
       // dibujamos el rectangulo
-      rect(i * bar_width, 0, bar_width, height);
+      rect(i * bar_width, 0, bar_width, height); 
+      
+      //*****PELOTAS*********//
+      if (animateBalls && numBalls >= 1){
+         drawBalls();
+      }
+      //*****PELOTAS*********//
+    }
+  }
+}
 
-	    //*****PELOTAS*********//
+void drawTvInvertido( int bars_nr) {
+  // definimos el ancho de las barras 
+  // por el tema del redondeo hacemos +1 para cubrir toda la pantalla
+  int bar_width = width / bars_nr +1;
+  // en funcion de la posicion x del mouse definimos cual de las barras de colores no se dibujara
+  int whichBar = -1;
+  if (com.z >= 2500){
+    whichBar = (int)((1280-(com2d.x*2)) / bar_width);
+  }
+  else if(com.z <= 2500){
+    whichBar = (int)((1280-(com2d.x*1.8)) / bar_width);
+  }
+
+  // dibujamos las barras
+  for (int i = 0; i < bars_nr; i ++) {
+    // dibujamos solo si el mouse no esta parado en esta barra
+    if(whichBar == i) {
+      // el color de la barra se corresponde a un color definido en el array color_bars[]
+      fill(color_bars[i%colorsNr],(int)alphaSlider.getValue());
+      // dibujamos el rectangulo
+      rect(i * bar_width, 0, bar_width, height); 
+      
+      //*****PELOTAS*********//
       if (animateBalls && numBalls >= 1){
          drawBalls();
       }

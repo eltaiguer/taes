@@ -25,6 +25,18 @@ public class ControlFrame extends PApplet {
       .plugTo(parent,"num")
       .setRange(1, 20)
       .setPosition(10,140);
+      
+     alphaSlider = cp5.addSlider("Transparencia")
+      .plugTo(parent,"alpha")
+      .setRange(0, 255)
+      .setPosition(10,90);
+      
+     invToggle = cp5.addToggle("Invertir fondo")
+     .setPosition(10,50)
+     .setSize(50,20)
+     .setValue(true)
+     .setMode(ControlP5.SWITCH)
+     ;
   }
   public void draw() {
     background(0);
