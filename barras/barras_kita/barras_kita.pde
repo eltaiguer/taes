@@ -5,6 +5,8 @@ import controlP5.*;
 private ControlP5 cp5;
 SimpleOpenNI  context;
 
+//--------------------------------
+//Tabla para dibujar colores noisy
 int[] table = new int[256];
 
 color[] userClr = new color[]{ color(255,0,0),
@@ -31,8 +33,10 @@ color[] color_bars={
   color(0,0,192)
 };
 
+//-----------------------------------------
+//Escala de grises para el noisy background
 color[] color_bars_bnw = {  
-   color(0,0,0),
+   color(80,80,80),
    color(112,112,112),
    color(144,144,144),
    color(176,176,176),
@@ -42,6 +46,8 @@ color[] color_bars_bnw = {
    color(255,255,255)
  };
 
+//-------------
+//Controller UI
 ControlFrame cf;
 CheckBox checkboxInv;
 CheckBox checkboxNoisyColor;
@@ -52,9 +58,8 @@ int colorsNr = color_bars.length;
 
 // esta funcion se ejecuta una vez sola, al principio
 void setup(){
-  // size define el tamano de nuestro sketch
-  //size(1024,768);
-  size(1280,960);
+  
+  size(1280,960);  // size define el tamano de nuestro sketch
   // por defecto esta cargada la opcion de dibujar bun contorno de color negro en las figuras
   // la queremos deshabilitar
   noStroke();
@@ -62,8 +67,11 @@ void setup(){
   
   cp5 = new ControlP5(this);
   cf = addControlFrame("Controladores",250,200);
-  //alphaSlider.setValue(255);
-
+  
+  //---------------------------------------
+  //Iniciamos el slider en el valor maximo
+  alphaSlider.setValue(255);
+  
   // cosas kinect
   context = new SimpleOpenNI(this);
   if(context.isInit() == false)
@@ -72,25 +80,27 @@ void setup(){
      exit();
      return;
   }
-
+  
+  //---------------------------
   // enable depthMap generation
   context.enableDepth();
-
+  
+  //--------------------------------------------
   // enable skeleton generation for all joints
   context.enableUser();
   
+  //----------------------------------------------------
+  //Configuramos los animacion del noisy color backround
   for (int i = 0; i < 256; i++) {
     table[i] = (int)(128 + 127.0 * sin(i * TWO_PI / 256.0));
   }
 };
 
-// esta funcion se ejecuta todo el tiempo en un loop constante
+ 
 void draw(){
-  // la funcion que creamos para dibujar el fondo ruidoso
-  
   if (checkboxNoisyColor.getState("NoisyColor")){
     createColorNoisyBackground();
-  }else{
+  } else {
     createNoisyBackground();
   }
   // la funcion que dibuja las barras de colores
@@ -112,27 +122,13 @@ void draw(){
     if(context.isTrackingSkeleton(userList[i]))
     {
       stroke(userClr[ (userList[i] - 1) % userClr.length ] );
-      drawSkeleton(userList[i]);
+     drawSkeleton(userList[i]);
     }
 
     // draw the center of mass
     if(context.getCoM(userList[i],com))
     {
-      context.convertRealWorldToProjective(com,com2d);
-      stroke(100,255,0);
-      strokeWeight(1);
-      beginShape(LINES);
-        vertex(com2d.x,com2d.y - 5);
-        vertex(com2d.x,com2d.y + 5);
-
-        vertex(com2d.x - 5,com2d.y);
-        vertex(com2d.x + 5,com2d.y);
-      endShape();
-
-      fill(0,255,100);
-      text(Integer.toString(userList[i]),com2d.x,com2d.y);
-
-      println("X: " + com2d.x);
+      context.convertRealWorldToProjective(com,com2d); 
     }
   }
 
@@ -153,7 +149,9 @@ void createNoisyBackground(){
   // una función ya dada que actualiza la ventana de la pantalla con los datos de los pixels [] array
   updatePixels();
 }
- 
+
+//---------------------------------------
+//Crea el noisy background usando colores 
 void createColorNoisyBackground() {
   // grab some samples, hmm could have used lookup table...
   int t = (int)(128 + 127.0 * sin(0.0013 * (float)millis()));
@@ -272,7 +270,7 @@ void drawSkeleton(int userId)
   context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_KNEE, SimpleOpenNI.SKEL_RIGHT_FOOT);
 }
 
-// -----------------------------------------------------------------
+// -------------------- 
 // SimpleOpenNI events
 
 void onNewUser(SimpleOpenNI curContext, int userId)
