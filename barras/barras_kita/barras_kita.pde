@@ -3,22 +3,17 @@ import java.awt.Frame;
 import controlP5.*;
 
 private ControlP5 cp5;
-
 SimpleOpenNI  context;
 
-// Booleano para invertir 
-boolean inv = false;
+int[] table = new int[256];
 
-// Bars alpha
-int alpha = 180;
-
-color[]       userClr = new color[]{ color(255,0,0),
-                                     color(0,255,0),
-                                     color(0,0,255),
-                                     color(255,255,0),
-                                     color(255,0,255),
-                                     color(0,255,255)
-                                   };
+color[] userClr = new color[]{ color(255,0,0),
+                               color(0,255,0),
+                               color(0,0,255),
+                               color(255,255,0),
+                               color(255,0,255),
+                               color(0,255,255)
+                             };
 
 PVector com = new PVector();
 PVector com2d = new PVector();
@@ -36,29 +31,21 @@ color[] color_bars={
   color(0,0,192)
 };
 
+color[] color_bars_bnw = {  
+   color(0,0,0),
+   color(112,112,112),
+   color(144,144,144),
+   color(176,176,176),
+   color(192,192,192),
+   color(208,208,208),
+   color(232,232,232),
+   color(255,255,255)
+ };
+
 ControlFrame cf;
-
-//*****PELOTAS*********//
-int maxBalls   = 15;
-int numBalls   = 1;
-float spring   = 0.05;
-float gravity  = 0.03;
-float friction = -0.9;
-Ball[] balls   = new Ball[maxBalls];
-boolean animateBalls;
-int num;
-int backCol;
-int extraAdd;
-float angle      = TWO_PI;
-boolean toSwitch = true;
-//*****PELOTAS*********//
-
-//*****PELOTAS*********//
-CheckBox checkboxPelotitas;
-Slider sliderPelotitas;
-Toggle invToggle;
+CheckBox checkboxInv;
+CheckBox checkboxNoisyColor;
 Slider alphaSlider;
-//*****PELOTAS*********//
 
 // aca se guarda el nro total de los colores definidos
 int colorsNr = color_bars.length;
@@ -71,6 +58,11 @@ void setup(){
   // por defecto esta cargada la opcion de dibujar bun contorno de color negro en las figuras
   // la queremos deshabilitar
   noStroke();
+  frameRate(30);
+  
+  cp5 = new ControlP5(this);
+  cf = addControlFrame("Controladores",250,200);
+  //alphaSlider.setValue(255);
 
   // cosas kinect
   context = new SimpleOpenNI(this);
@@ -81,47 +73,29 @@ void setup(){
      return;
   }
 
- // context.setMirror(false);
-
   // enable depthMap generation
   context.enableDepth();
 
   // enable skeleton generation for all joints
   context.enableUser();
-
- // context.enableRGB();
-
-  //*****PELOTAS*********//
-  cp5          = new ControlP5(this);
-  cf           = addControlFrame("Controladores", 250, 200);
-  backCol      = 0;
-  num          = 6;
-  extraAdd     = 0;
-  animateBalls = false;
-
-  for (int i = 0; i < maxBalls; i++) {
-    balls[i] = new Ball(random(width), random(height), random(30, 70), i, balls);
+  
+  for (int i = 0; i < 256; i++) {
+    table[i] = (int)(128 + 127.0 * sin(i * TWO_PI / 256.0));
   }
- //******PELOTAS********//
-
 };
 
 // esta funcion se ejecuta todo el tiempo en un loop constante
 void draw(){
-
-  //******PELOTAS********//
-  //Pregunto si hay que dibujar pelotitas
-  animateBalls = checkboxPelotitas.getState("Pelotitas");
-
-  numBalls = (int)sliderPelotitas.getValue();
-  //******PELOTAS********//
-
-
   // la funcion que creamos para dibujar el fondo ruidoso
-  createNoisyBackground();
+  
+  if (checkboxNoisyColor.getState("NoisyColor")){
+    createColorNoisyBackground();
+  }else{
+    createNoisyBackground();
+  }
   // la funcion que dibuja las barras de colores
   // le pasamos la cantidad de barras que queremos dibujar
-  if (invToggle.getState()){
+  if (checkboxInv.getState("Invertir")){
     drawTvInvertido(colorsNr);
   }else{
     drawTv(colorsNr);
@@ -130,10 +104,6 @@ void draw(){
   //cosas kinect
   // update the cam
   context.update();
-
-  // draw depthImageMap
-  //image(context.depthImage(),0,0);
- // image(context.userImage(),0,0);
 
   // draw the skeleton if it's available
   int[] userList = context.getUsers();
@@ -162,9 +132,7 @@ void draw(){
       fill(0,255,100);
       text(Integer.toString(userList[i]),com2d.x,com2d.y);
 
-      //println("X: " + com2d.x);
-      println("Z: " + com.z);
-    //  println("mouse: " + mouseX/ bar_width);
+      println("X: " + com2d.x);
     }
   }
 
@@ -185,6 +153,31 @@ void createNoisyBackground(){
   // una función ya dada que actualiza la ventana de la pantalla con los datos de los pixels [] array
   updatePixels();
 }
+ 
+void createColorNoisyBackground() {
+  // grab some samples, hmm could have used lookup table...
+  int t = (int)(128 + 127.0 * sin(0.0013 * (float)millis()));
+  int t2 = (int)(128 + 127.0 * sin(0.0023 * (float)millis()));
+  int t3 = (int)(128 + 127.0 * sin(0.0007 * (float)millis()));
+   
+  loadPixels();
+   
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < width; x++) {
+      // Define a function for each color component that depends on the
+      // x,y coordinate and time. Use the lookup table for nice swirly movement.
+      // There is no deeper logic here, I just experimented with the functions
+      // untill I found something that looked pleasing.
+      int r = table[(x / 5 + t / 4 + table[(t2 / 3 + y / 8) & 0xff]) & 0xff];
+      int g = table[(y / 3 + t + table[(t3 + x / 5) & 0xff]) & 0xff];
+      int b = table[(y / 4 + t2 + table[(t + g / 4 + x / 3) & 0xff]) & 0xff];
+      pixels[x + y * width] = color(r, g, b);
+    }
+  }
+   
+  updatePixels();
+}
+
 
 
 void drawTv( int bars_nr) {
@@ -205,15 +198,13 @@ void drawTv( int bars_nr) {
     // dibujamos solo si el mouse no esta parado en esta barra
     if(whichBar != i) {
       // el color de la barra se corresponde a un color definido en el array color_bars[]
-      fill(color_bars[i%colorsNr],(int)alphaSlider.getValue());
+      if (checkboxNoisyColor.getState("NoisyColor")){
+        fill(color_bars_bnw[i%colorsNr],(int)alphaSlider.getValue());
+      }else{
+        fill(color_bars[i%colorsNr],(int)alphaSlider.getValue());
+      }
       // dibujamos el rectangulo
       rect(i * bar_width, 0, bar_width, height); 
-      
-      //*****PELOTAS*********//
-      if (animateBalls && numBalls >= 1){
-         drawBalls();
-      }
-      //*****PELOTAS*********//
     }
   }
 }
@@ -236,32 +227,16 @@ void drawTvInvertido( int bars_nr) {
     // dibujamos solo si el mouse no esta parado en esta barra
     if(whichBar == i) {
       // el color de la barra se corresponde a un color definido en el array color_bars[]
-      fill(color_bars[i%colorsNr],(int)alphaSlider.getValue());
+      if (checkboxNoisyColor.getState("NoisyColor")){
+        fill(color_bars_bnw[i%colorsNr],(int)alphaSlider.getValue());
+      }else{
+        fill(color_bars[i%colorsNr],(int)alphaSlider.getValue());
+      }
       // dibujamos el rectangulo
       rect(i * bar_width, 0, bar_width, height); 
-      
-      //*****PELOTAS*********//
-      if (animateBalls && numBalls >= 1){
-         drawBalls();
-      }
-      //*****PELOTAS*********//
     }
   }
 }
-
-//******* PELOTAS *******//
-void drawBalls(){
-  int iter = 1;
-  for (Ball ball : balls) {
-    if (iter <= numBalls) {
-      ball.collide();
-      ball.move();
-      ball.display();
-      iter++;
-    }
-  }
-}
-//******PELOTAS********//
 
 //mas kinect
 

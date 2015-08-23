@@ -9,35 +9,35 @@ public class ControlFrame extends PApplet {
     size(w, h);
     frameRate(25);
     cp5 = new ControlP5(this);
-
-     checkboxPelotitas = cp5.addCheckBox("checkBox")
-                .setPosition(10, 110)
-                .setColorForeground(color(120))
-                .setColorActive(color(255))
-                .setColorLabel(color(255))
-                .setSize(20, 20)
-                .setItemsPerRow(3)
-                .setSpacingColumn(30)
-                .setSpacingRow(20)
-                .addItem("Pelotitas", 50);
-
-     sliderPelotitas =  cp5.addSlider("Numero de Pelotitas")
-      .plugTo(parent,"num")
-      .setRange(1, 20)
-      .setPosition(10,140);
       
      alphaSlider = cp5.addSlider("Transparencia")
       .plugTo(parent,"alpha")
       .setRange(0, 255)
       .setPosition(10,90);
+     
+     checkboxInv = cp5.addCheckBox("checkboxInv")
+      .setPosition(10,50)
+      .setColorForeground(color(120))
+      .setColorActive(color(255))
+      .setColorLabel(color(255))
+      .setSize(20, 20)
+      .setItemsPerRow(3)
+      .setSpacingColumn(30)
+      .setSpacingRow(20)
+      .addItem("Invertir", 50);
       
-     invToggle = cp5.addToggle("Invertir fondo")
-     .setPosition(10,50)
-     .setSize(50,20)
-     .setValue(true)
-     .setMode(ControlP5.SWITCH)
-     ;
+    checkboxNoisyColor = cp5.addCheckBox("checkboxNoisyColor")
+      .setPosition(10,10)
+      .setColorForeground(color(120))
+      .setColorActive(color(255))
+      .setColorLabel(color(255))
+      .setSize(20, 20)
+      .setItemsPerRow(3)
+      .setSpacingColumn(30)
+      .setSpacingRow(20)
+      .addItem("NoisyColor", 50);
   }
+  
   public void draw() {
     background(0);
   }
