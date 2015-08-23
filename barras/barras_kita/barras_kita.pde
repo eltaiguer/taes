@@ -1,6 +1,7 @@
 import SimpleOpenNI.*;
 import java.awt.Frame;
 import controlP5.*;
+import ddf.minim.*;
 
 private ControlP5 cp5;
 SimpleOpenNI  context;
@@ -35,7 +36,7 @@ color[] color_bars={
 
 //-----------------------------------------
 //Escala de grises para el noisy background
-color[] color_bars_bnw = {  
+color[] color_bars_bnw = {
    color(80,80,80),
    color(112,112,112),
    color(144,144,144),
@@ -53,25 +54,36 @@ CheckBox checkboxInv;
 CheckBox checkboxNoisyColor;
 Slider alphaSlider;
 
+/// sonido
+Minim minim;
+AudioPlayer song;
+
+String[] notes = new String[] {"c60", "d62", "e64", "f65", "g67", "a69", "b71"};
+
+int lastNote = -1;
+
+/// sonido
+
+
 // aca se guarda el nro total de los colores definidos
 int colorsNr = color_bars.length;
 
 // esta funcion se ejecuta una vez sola, al principio
 void setup(){
-  
+
   size(1280,960);  // size define el tamano de nuestro sketch
   // por defecto esta cargada la opcion de dibujar bun contorno de color negro en las figuras
   // la queremos deshabilitar
   noStroke();
   frameRate(30);
-  
+
   cp5 = new ControlP5(this);
   cf = addControlFrame("Controladores",250,200);
-  
+
   //---------------------------------------
   //Iniciamos el slider en el valor maximo
   alphaSlider.setValue(255);
-  
+
   // cosas kinect
   context = new SimpleOpenNI(this);
   if(context.isInit() == false)
@@ -80,23 +92,27 @@ void setup(){
      exit();
      return;
   }
-  
+
   //---------------------------
   // enable depthMap generation
   context.enableDepth();
-  
+
   //--------------------------------------------
   // enable skeleton generation for all joints
   context.enableUser();
-  
+
   //----------------------------------------------------
   //Configuramos los animacion del noisy color backround
   for (int i = 0; i < 256; i++) {
     table[i] = (int)(128 + 127.0 * sin(i * TWO_PI / 256.0));
   }
+
+  ////sonido
+  minim = new Minim(this);
+
 };
 
- 
+
 void draw(){
   if (checkboxNoisyColor.getState("NoisyColor")){
     createColorNoisyBackground();
@@ -128,7 +144,9 @@ void draw(){
     // draw the center of mass
     if(context.getCoM(userList[i],com))
     {
-      context.convertRealWorldToProjective(com,com2d); 
+
+      context.convertRealWorldToProjective(com,com2d);
+
     }
   }
 
@@ -151,15 +169,15 @@ void createNoisyBackground(){
 }
 
 //---------------------------------------
-//Crea el noisy background usando colores 
+//Crea el noisy background usando colores
 void createColorNoisyBackground() {
   // grab some samples, hmm could have used lookup table...
   int t = (int)(128 + 127.0 * sin(0.0013 * (float)millis()));
   int t2 = (int)(128 + 127.0 * sin(0.0023 * (float)millis()));
   int t3 = (int)(128 + 127.0 * sin(0.0007 * (float)millis()));
-   
+
   loadPixels();
-   
+
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
       // Define a function for each color component that depends on the
@@ -172,17 +190,18 @@ void createColorNoisyBackground() {
       pixels[x + y * width] = color(r, g, b);
     }
   }
-   
+
   updatePixels();
 }
 
 
 
 void drawTv( int bars_nr) {
-  // definimos el ancho de las barras 
+  // definimos el ancho de las barras
   // por el tema del redondeo hacemos +1 para cubrir toda la pantalla
   int bar_width = width / bars_nr +1;
   // en funcion de la posicion x del mouse definimos cual de las barras de colores no se dibujara
+
   int whichBar = -1;
   if (com.z >= 2500){
     whichBar = (int)((1280-(com2d.x*2)) / bar_width);
@@ -190,6 +209,8 @@ void drawTv( int bars_nr) {
   else if(com.z <= 2500){
     whichBar = (int)((1280-(com2d.x*1.8)) / bar_width);
   }
+  playPianoNote(whichBar);
+
 
   // dibujamos las barras
   for (int i = 0; i < bars_nr; i ++) {
@@ -202,13 +223,13 @@ void drawTv( int bars_nr) {
         fill(color_bars[i%colorsNr],(int)alphaSlider.getValue());
       }
       // dibujamos el rectangulo
-      rect(i * bar_width, 0, bar_width, height); 
+      rect(i * bar_width, 0, bar_width, height);
     }
   }
 }
 
 void drawTvInvertido( int bars_nr) {
-  // definimos el ancho de las barras 
+  // definimos el ancho de las barras
   // por el tema del redondeo hacemos +1 para cubrir toda la pantalla
   int bar_width = width / bars_nr +1;
   // en funcion de la posicion x del mouse definimos cual de las barras de colores no se dibujara
@@ -231,7 +252,7 @@ void drawTvInvertido( int bars_nr) {
         fill(color_bars[i%colorsNr],(int)alphaSlider.getValue());
       }
       // dibujamos el rectangulo
-      rect(i * bar_width, 0, bar_width, height); 
+      rect(i * bar_width, 0, bar_width, height);
     }
   }
 }
@@ -270,7 +291,7 @@ void drawSkeleton(int userId)
   context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_KNEE, SimpleOpenNI.SKEL_RIGHT_FOOT);
 }
 
-// -------------------- 
+// --------------------
 // SimpleOpenNI events
 
 void onNewUser(SimpleOpenNI curContext, int userId)
@@ -290,3 +311,17 @@ void onVisibleUser(SimpleOpenNI curContext, int userId)
 {
   //println("onVisibleUser - userId: " + userId);
 }
+
+/////sonidos
+void playPianoNote(int bar){
+  println(bar);
+  if (bar != -1){
+    if(lastNote != bar){
+      song = minim.loadFile(notes[bar]+".mp3");
+      song.play();
+      lastNote = bar;
+    }
+  }
+}
+
+/////sonidos

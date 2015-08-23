@@ -1,20 +1,20 @@
 import processing.core.*; 
-import processing.data.*; 
-import processing.event.*; 
-import processing.opengl.*; 
+import processing.data.*;
+import processing.event.*;
+import processing.opengl.*;
 
-import SimpleOpenNI.*; 
-import java.awt.Frame; 
-import controlP5.*; 
+import SimpleOpenNI.*;
+import java.awt.Frame;
+import controlP5.*;
 
-import java.util.HashMap; 
-import java.util.ArrayList; 
-import java.io.File; 
-import java.io.BufferedReader; 
-import java.io.PrintWriter; 
-import java.io.InputStream; 
-import java.io.OutputStream; 
-import java.io.IOException; 
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
 
 public class barras_kita extends PApplet {
 
@@ -289,29 +289,29 @@ public void onVisibleUser(SimpleOpenNI curContext, int userId)
   //println("onVisibleUser - userId: " + userId);
 }
 public class Ball {
-  
+
   float x, y;
   float diameter;
   float vx = 0;
   float vy = 0;
   int id;
   Ball[] others;
- 
+
   Ball(float xin, float yin, float din, int idin, Ball[] oin) {
     x = xin;
     y = yin;
     diameter = din;
     id = idin;
     others = oin;
-  } 
-  
+  }
+
   public void collide() {
     for (int j = id + 1; j < numBalls; j++) {
       float dx = mouseX/*others[j].x*/ - x;
       float dy = mouseY/*others[j].y*/ - y;
       float distance = sqrt(dx*dx + dy*dy);
       float minDist = /*others[j].diameter/2 +*/ diameter/2;
-      if (distance < minDist) { 
+      if (distance < minDist) {
         float angle = atan2(dy, dx);
         float targetX = x + cos(angle) * minDist;
         float targetY = y + sin(angle) * minDist;
@@ -324,16 +324,16 @@ public class Ball {
           others[j].vy += ay;
         }
       }
-    }   
+    }
   }
-  
+
   public void move() {
     vy += gravity;
     x += vx;
     y += vy;
     if (x + diameter/2 > width) {
       x = width - diameter/2;
-      vx *= friction; 
+      vx *= friction;
     }
     else if (x - diameter/2 < 0) {
       x = diameter/2;
@@ -341,18 +341,18 @@ public class Ball {
     }
     if (y + diameter/2 > height) {
       y = height - diameter/2;
-      vy *= friction; 
-    } 
+      vy *= friction;
+    }
     else if (y - diameter/2 < 0) {
       y = diameter/2;
       vy *= friction;
     }
   }
-  
+
   public void display() {
     fill(0xff4395CB,100);
     ellipse(x, y, diameter, diameter);
-   
+
   }
 }
 
