@@ -9,12 +9,12 @@ public class ControlFrame extends PApplet {
     size(w, h);
     frameRate(25);
     cp5 = new ControlP5(this);
-      
+
      alphaSlider = cp5.addSlider("Transparencia")
       .plugTo(parent,"alpha")
       .setRange(0, 255)
       .setPosition(10,90);
-     
+
      checkboxInv = cp5.addCheckBox("checkboxInv")
       .setPosition(10,50)
       .setColorForeground(color(120))
@@ -25,7 +25,7 @@ public class ControlFrame extends PApplet {
       .setSpacingColumn(30)
       .setSpacingRow(20)
       .addItem("Invertir", 50);
-      
+
     checkboxNoisyColor = cp5.addCheckBox("checkboxNoisyColor")
       .setPosition(10,10)
       .setColorForeground(color(120))
@@ -36,8 +36,14 @@ public class ControlFrame extends PApplet {
       .setSpacingColumn(30)
       .setSpacingRow(20)
       .addItem("NoisyColor", 50);
+
+    soundToggle = cp5.addToggle("Sonido")
+      .setPosition(10,130)
+      .setSize(50,20)
+      .setValue(false)
+      .setMode(ControlP5.SWITCH);      
   }
-  
+
   public void draw() {
     background(0);
   }

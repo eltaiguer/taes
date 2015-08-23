@@ -53,17 +53,14 @@ ControlFrame cf;
 CheckBox checkboxInv;
 CheckBox checkboxNoisyColor;
 Slider alphaSlider;
+Toggle soundToggle;
 
 /// sonido
 Minim minim;
 AudioPlayer song;
 
 String[] notes = new String[] {"c60", "d62", "e64", "f65", "g67", "a69", "b71"};
-
 int lastNote = -1;
-
-/// sonido
-
 
 // aca se guarda el nro total de los colores definidos
 int colorsNr = color_bars.length;
@@ -130,23 +127,14 @@ void draw(){
   //cosas kinect
   // update the cam
   context.update();
-
   // draw the skeleton if it's available
   int[] userList = context.getUsers();
   for(int i=0;i<userList.length;i++)
   {
-    if(context.isTrackingSkeleton(userList[i]))
-    {
-      stroke(userClr[ (userList[i] - 1) % userClr.length ] );
-     drawSkeleton(userList[i]);
-    }
-
     // draw the center of mass
     if(context.getCoM(userList[i],com))
     {
-
       context.convertRealWorldToProjective(com,com2d);
-
     }
   }
 
@@ -195,23 +183,17 @@ void createColorNoisyBackground() {
 }
 
 
-
 void drawTv( int bars_nr) {
   // definimos el ancho de las barras
   // por el tema del redondeo hacemos +1 para cubrir toda la pantalla
   int bar_width = width / bars_nr +1;
   // en funcion de la posicion x del mouse definimos cual de las barras de colores no se dibujara
-
+  
   int whichBar = -1;
-  if (com.z >= 2500){
+  if (com2d.z != 0){
     whichBar = (int)((1280-(com2d.x*2)) / bar_width);
+    playPianoNote(whichBar);
   }
-  else if(com.z <= 2500){
-    whichBar = (int)((1280-(com2d.x*1.8)) / bar_width);
-  }
-  playPianoNote(whichBar);
-
-
   // dibujamos las barras
   for (int i = 0; i < bars_nr; i ++) {
     // dibujamos solo si el mouse no esta parado en esta barra
@@ -234,11 +216,9 @@ void drawTvInvertido( int bars_nr) {
   int bar_width = width / bars_nr +1;
   // en funcion de la posicion x del mouse definimos cual de las barras de colores no se dibujara
   int whichBar = -1;
-  if (com.z >= 2500){
+  if (com2d.z != 0){
     whichBar = (int)((1280-(com2d.x*2)) / bar_width);
-  }
-  else if(com.z <= 2500){
-    whichBar = (int)((1280-(com2d.x*1.8)) / bar_width);
+    playPianoNote(whichBar);
   }
 
   // dibujamos las barras
@@ -257,43 +237,6 @@ void drawTvInvertido( int bars_nr) {
   }
 }
 
-//mas kinect
-
-// draw the skeleton with the selected joints
-void drawSkeleton(int userId)
-{
-  // to get the 3d joint data
-  /*
-  PVector jointPos = new PVector();
-  context.getJointPositionSkeleton(userId,SimpleOpenNI.SKEL_NECK,jointPos);
-  println(jointPos);
-  */
-
-  context.drawLimb(userId, SimpleOpenNI.SKEL_HEAD, SimpleOpenNI.SKEL_NECK);
-
-  context.drawLimb(userId, SimpleOpenNI.SKEL_NECK, SimpleOpenNI.SKEL_LEFT_SHOULDER);
-  context.drawLimb(userId, SimpleOpenNI.SKEL_LEFT_SHOULDER, SimpleOpenNI.SKEL_LEFT_ELBOW);
-  context.drawLimb(userId, SimpleOpenNI.SKEL_LEFT_ELBOW, SimpleOpenNI.SKEL_LEFT_HAND);
-
-  context.drawLimb(userId, SimpleOpenNI.SKEL_NECK, SimpleOpenNI.SKEL_RIGHT_SHOULDER);
-  context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_SHOULDER, SimpleOpenNI.SKEL_RIGHT_ELBOW);
-  context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_ELBOW, SimpleOpenNI.SKEL_RIGHT_HAND);
-
-  context.drawLimb(userId, SimpleOpenNI.SKEL_LEFT_SHOULDER, SimpleOpenNI.SKEL_TORSO);
-  context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_SHOULDER, SimpleOpenNI.SKEL_TORSO);
-
-  context.drawLimb(userId, SimpleOpenNI.SKEL_TORSO, SimpleOpenNI.SKEL_LEFT_HIP);
-  context.drawLimb(userId, SimpleOpenNI.SKEL_LEFT_HIP, SimpleOpenNI.SKEL_LEFT_KNEE);
-  context.drawLimb(userId, SimpleOpenNI.SKEL_LEFT_KNEE, SimpleOpenNI.SKEL_LEFT_FOOT);
-
-  context.drawLimb(userId, SimpleOpenNI.SKEL_TORSO, SimpleOpenNI.SKEL_RIGHT_HIP);
-  context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_HIP, SimpleOpenNI.SKEL_RIGHT_KNEE);
-  context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_KNEE, SimpleOpenNI.SKEL_RIGHT_FOOT);
-}
-
-// --------------------
-// SimpleOpenNI events
-
 void onNewUser(SimpleOpenNI curContext, int userId)
 {
   println("onNewUser - userId: " + userId);
@@ -307,19 +250,17 @@ void onLostUser(SimpleOpenNI curContext, int userId)
   println("onLostUser - userId: " + userId);
 }
 
-void onVisibleUser(SimpleOpenNI curContext, int userId)
-{
-  //println("onVisibleUser - userId: " + userId);
-}
 
 /////sonidos
 void playPianoNote(int bar){
   println(bar);
-  if (bar != -1){
-    if(lastNote != bar){
-      song = minim.loadFile(notes[bar]+".mp3");
-      song.play();
-      lastNote = bar;
+  if (soundToggle.getState()){
+    if (bar>=0 && bar<notes.length){
+      if(lastNote != bar){
+        song = minim.loadFile(notes[bar]+".mp3");
+        song.play();
+        lastNote = bar;
+      }
     }
   }
 }
