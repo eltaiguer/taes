@@ -11,3 +11,5 @@ Para su desarrollo se utilizaron las siguientes herramientas:
 * [Processing](https://processing.org/)
 * [SimpleOpenNI](https://code.google.com/p/simple-openni/)
 * [ControlP5](http://www.sojamo.de/libraries/controlP5/)
+
+#### Tarea 1 - Sin la gravedad todos estaríamos volando ####
