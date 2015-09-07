@@ -7,10 +7,6 @@ class SceneManager{
   SceneManager(){
     
     Scene [] allScenes = {        
-      /*new LineArt(),         
-      new Fluid(),           
-      new MoveImg(),         
-      new MeTv()*/
       new Bed(),
       new BedSpaceTransition()
     };
