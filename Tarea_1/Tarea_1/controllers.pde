@@ -48,17 +48,17 @@ public class ControlFrame extends PApplet {
   public void draw() {
     background(0);
     fill(255);
-    text("Escena 1 - Espejo de lineas",10,20);
+    text("Escena 1 - Cama",10,20);
     stroke(255,0,0);
 
     line(5,135,445,135);
-    text("Escena 2 - Sistema de particulas",10,160);
+    text("Transición Cama-Espacio",10,160);
 
     line(5,345,445,345);
-    text("Escena 3 - Imagen desplazada",10,370);  
+    text("Escena 2 - Espacio",10,370);  
 
     line(5,515,445,515);
-    text("Escena 4 - Yo en la imagen",10,540);  
+    text("Transición Espacio-Cielo",10,540);  
   }
 
   private ControlFrame() {
