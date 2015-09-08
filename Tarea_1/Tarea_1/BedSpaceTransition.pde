@@ -4,6 +4,7 @@ class BedSpaceTransition implements Scene{
   float h2;//=height/2
   float w2;//=width/2
   float d2;//=diagonal/2
+  Timer timer;
   
   public BedSpaceTransition(){}
   void closeScene(){}
@@ -13,6 +14,8 @@ class BedSpaceTransition implements Scene{
     h2= height/2;
     d2 = dist(0, 0, w2, h2);
     noStroke();
+    timer = new Timer();
+    timer.startTimer();
   }
   
   void drawScene(){
@@ -35,6 +38,7 @@ class BedSpaceTransition implements Scene{
       if (x<0||x>width||y<0||y>height) stars.remove(i);
       if (stars.size()>9999) stars.remove(1);
       ellipse(x, y, d, d);//draw stars}
+      println("scene " + timer.getTime());
     }
   }
   

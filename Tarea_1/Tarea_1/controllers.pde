@@ -24,8 +24,7 @@ public class ControlFrame extends PApplet {
       .setPosition(180, 60)
       .setSize(40, 20)
       .setLabel("Activar")
-      ;
-    
+      ;    
     
   /////////////// Escena 2 Espacio /////////////////////////////////
     
