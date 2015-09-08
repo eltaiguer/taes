@@ -16,9 +16,7 @@ class SceneManager{
       // escena 3
       // transicion 3
       // escena 4
-      // transicion 4
-      
-     
+      // transicion 4    
     };
 
     scenes =allScenes;
@@ -44,8 +42,6 @@ class SceneManager{
     actualSceneNr = sceneNr;
     actualScene.closeScene();
     actualScene = scenes[sceneNr];
-   // resetDancers();
-   // defaultModes();
     actualScene.initialScene();
     println(sceneNr,actualScene.getSceneName());
     stopDraw = false;
