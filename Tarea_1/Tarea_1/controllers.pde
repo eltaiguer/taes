@@ -25,10 +25,21 @@ public class ControlFrame extends PApplet {
       .setSize(80, 80)
       .setLabel("Activar  Transicion Cama-Espacio")
       ;
+      
+/////////////// Escena 3 /////////////////////////////////
+    
+    cp5.addBang("bang3")
+      .setPosition(360, 360)
+      .setSize(80, 80)
+      .setLabel("Activar Cielo")
+      ;
+      
+    cp5.addBang("bang4")
+      .setPosition(360, 450)
+      .setSize(80, 80)
+      .setLabel("Activar Transición Cielo-Agua")
+      ;
   }
-
-
-
 
   void controlEvent(ControlEvent theEvent) {
     String n = theEvent.getName();
@@ -43,6 +54,13 @@ public class ControlFrame extends PApplet {
       manager.activate(1);
     }
     
+    if( n == "bang3") {
+      manager.activate(2);
+    }
+    
+    if( n == "bang4") {
+      manager.activate(3);
+    }
   }
 
   public void draw() {

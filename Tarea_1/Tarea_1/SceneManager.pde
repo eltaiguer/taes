@@ -12,7 +12,9 @@ class SceneManager{
       new MoveImg(),         
       new MeTv()*/
       new Bed(),
-      new BedSpaceTransition()
+      new BedSpaceTransition(),
+      new Sky(),
+      new SkyWaterTransition()
     };
 
     scenes =allScenes;
