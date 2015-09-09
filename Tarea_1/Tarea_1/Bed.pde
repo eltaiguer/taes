@@ -6,7 +6,7 @@ class Bed implements Scene{
   void closeScene(){}
   void initialScene(){
     bedImg = loadImage("bed1.png");
-    bedImg.resize(640,0);  
+    bedImg.resize(1280,0);  
   }
   
   void drawScene(){
