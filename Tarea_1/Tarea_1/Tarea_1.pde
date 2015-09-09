@@ -10,7 +10,7 @@ SceneManager manager;
 boolean stopDraw = false;
 
 void setup(){
-  size(640,480);
+  size(1280,960);
   cf = addControlFrame("Controladores", 450,700);
   manager = new SceneManager(); 
 }
