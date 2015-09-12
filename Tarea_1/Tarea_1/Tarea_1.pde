@@ -130,6 +130,7 @@ void updateJointsPosition() {
 
 void draw() {
   updateJointsPosition();
+  
   if (!stopDraw) manager.actualScene.drawScene();
 
   fill(0, 255, 0);
@@ -146,11 +147,8 @@ void draw() {
   drawJoint(leftFoot);
 }
 
-void onNewUser(SimpleOpenNI curContext, int userId)
-{
+void onNewUser(SimpleOpenNI curContext, int userId){
   println("onNewUser - userId: " + userId);
-  println("\tstart tracking skeleton");
-
   curContext.startTrackingSkeleton(userId);
 }
 

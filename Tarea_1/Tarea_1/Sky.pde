@@ -44,14 +44,14 @@ FBox rightHandToRightShoulder,rightShoulderToLeftShoulder, leftShoulderToleftHan
     cloudBox.setStatic(true);
     world.add(cloudBox);
     
-    rightHandToRightShoulder = new FBox(100,5);
+    /*rightHandToRightShoulder = new FBox(100,5);
     world.add(rightHandToRightShoulder);
     
     rightShoulderToLeftShoulder = new FBox(50,5);
     world.add(rightHandToRightShoulder); 
     
     leftShoulderToleftHand  = new FBox(100,5);
-    world.add(rightHandToRightShoulder);
+    world.add(rightHandToRightShoulder);*/
   }
 
   void closeScene(){}
@@ -63,28 +63,28 @@ FBox rightHandToRightShoulder,rightShoulderToLeftShoulder, leftShoulderToleftHan
   void drawScene(){
     background(sky);
     updateCloudPosition();
-    updateArmsPosition();
+    //updateArmsPosition();
     world.step();
     world.draw();
   }
   
   void updateArmsPosition(){
-    rightHandToRightShoulder.adjustPosition(rightHand2d.x,rightHand2d.y);
-    rightHandToRightShoulder.setWidth(dist(rightHand2d, rightShoulder2d));
-    rightHandToRightShoulder.adjustAngle(PVector.angleBetween(rightHand2d, rightShoulder2d));
+    /*rightHandToRightShoulder.adjustPosition(rightHand2d.x,rightHand2d.y);
+    rightHandToRightShoulder.setWidth(dist(rightHand2d.x,rightHand2d.y, rightShoulder2d.x, rightShoulder2d.y));
+    rightHandToRightShoulder.adjustRotation(PVector.angleBetween(rightHand2d, rightShoulder2d));
     
     rightShoulderToLeftShoulder.adjustPosition(rightShoulder2d.x, rightShoulder2d.y);
-    rightShoulderToLeftShoulder.setWidth(dist(rightShoulder2d,leftShoulder2d));
-    rightShoulderToLeftShoulder.adjustAngle(PVector.angleBetween(rightShoulder2d, leftShoulder2d));
+    rightShoulderToLeftShoulder.setWidth(dist(rightShoulder2d.x,rightShoulder2d.y,leftShoulder2d.x,leftShoulder2d.y));
+    rightShoulderToLeftShoulder.adjustRotation(PVector.angleBetween(rightShoulder2d, leftShoulder2d));
     
     leftShoulderToleftHand.adjustPosition(leftShoulder2d.x,leftShoulder2d.y);
-    leftShoulderToleftHand.setWidth(dist(leftShoulder2d,leftHand2d));
-    leftShoulderToleftHand.adjustAngle(PVector.angleBetween(leftShoulder2d, leftHand2d));
+    leftShoulderToleftHand.setWidth(dist(leftShoulder2d.x,leftShoulder2d.y,leftHand2d.x,leftHand2d.y));
+    leftShoulderToleftHand.adjustRotation(PVector.angleBetween(leftShoulder2d, leftHand2d));*/
   }
 
   void updateCloudPosition(){    
     //cloudBox.setPosition(com2d.x*2-250,800);
-    cloudBox.setPosition(mouseX,800);
+    cloudBox.adjustPosition(mouseX,800);
   }
 }
 
