@@ -20,8 +20,7 @@ class Space implements Scene{
   void closeScene(){}
 
   void initialScene(){
-    //fondo
-    size(1280, 760);
+    //fondo    
     for (int i=0;i<2000;i++) {
       PVector P = new PVector(random(2*width), random(2*height));
       stars.add(P);

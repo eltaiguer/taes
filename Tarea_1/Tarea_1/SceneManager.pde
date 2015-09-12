@@ -10,9 +10,7 @@ class SceneManager{
       new Bed(),
       new BedSpaceTransition(),
       new Space(),
-      new SpaceSkyTransition(),
-      // hay que respetar este orden
-      // porque luego se referencia por indice
+      new SpaceSkyTransition(),      
       new Sky(),
       // escena 2
       new SpaceSkyTransition(),

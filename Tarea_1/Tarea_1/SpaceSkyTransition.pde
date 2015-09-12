@@ -1,7 +1,7 @@
 class SpaceSkyTransition implements Scene{
  
-  int c=0;
-  int count = 0;
+  int c;
+  int count;
   int size;
   
   public SpaceSkyTransition(){}
@@ -10,13 +10,16 @@ class SpaceSkyTransition implements Scene{
   void initialScene(){
     noStroke(); 
     size = height; 
+    c=0;
+    count=0;
   }
   
   void drawScene(){
-    count++;
+    count++;    
+    fill(42,138,201,c);
     rect(0,size,width,height);
-    fill(48,139,206,c);
-    if (count==10){
+    
+    if (count==40){
        c++;
        count=0;
     }
