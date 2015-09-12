@@ -8,6 +8,8 @@ class Sky implements Scene{
   FBox rightHandToRightShoulder,rightShoulderToLeftShoulder, leftShoulderToleftHand;
 
   public Sky(){
+    println("width " + width);
+    println("height " + height);
     // Create background image
     sky = createImage(width, height, RGB);
       for(int i = 0; i < width; i++){

@@ -7,12 +7,11 @@ class Bed implements Scene{
 
   void initialScene(){
     bedImg = loadImage("bed1.png");
-    bedImg.resize(1280,0);
-  }
-
-  void drawScene(){
+    bedImg.resize(width,0);
     image(bedImg,0,0);
   }
+
+  void drawScene(){}
 
   String getSceneName(){return "Bed";};
 }
