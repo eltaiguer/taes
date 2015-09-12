@@ -9,12 +9,15 @@ class Space implements Scene{
 
   //luna
   PImage img;
-  int moon_width  = 225;
-  int moon_height = 225;
-  int moon_x      = 1100;
-  int moon_y      = 150;
+  boolean moon_is_moving = false;
+  int moon_width         = 225;
+  int moon_height        = 225;
+  int moon_x             = 700;
+  int moon_y             = 150;
   FWorld fworld;
-  FCircle fcircle;
+  FCircle fmoon;
+  FCircle f_rigth_hand;
+  FCircle f_left_hand;
 
   public Space() {}
 
@@ -42,11 +45,21 @@ class Space implements Scene{
 
     fworld  = new FWorld();
     fworld.setGravity(0,75);
-    fcircle = new FCircle(225);
-    fcircle.attachImage(img);
-    fcircle.setPosition(moon_x, moon_y);
-    fcircle.setStatic(true);
-    fworld.add(fcircle);
+    fmoon = new FCircle(225);
+    fmoon.attachImage(img);
+    fmoon.setPosition(moon_x, moon_y);
+    fmoon.setStatic(true);
+    fworld.add(fmoon);
+
+    //manos
+    f_rigth_hand = new FCircle(75);
+    f_left_hand  = new FCircle(95);
+
+    f_rigth_hand.setDrawable(true);
+    f_left_hand.setDrawable(true);
+
+    fworld.add(f_rigth_hand);
+    fworld.add(f_left_hand);
   }
 
   void drawScene() {
@@ -66,6 +79,24 @@ class Space implements Scene{
       float d = dist(P.x, P.y, width/2, height/2);
       d       = map(d, 0, width/2, 0, 3);
       ellipse(P.x, P.y, d, d);
+    }
+
+    //manos
+    if (!Float.isNaN(rightHand2d.x) && !Float.isNaN(rightHand2d.y)) {
+      f_rigth_hand.setPosition(rightHand2d.x, rightHand2d.y);
+      f_left_hand.setPosition(leftHand2d.x, leftHand2d.y);
+    } else {
+      f_rigth_hand.setPosition(width/2, height/2);
+      f_left_hand.setPosition(width/2, height/2);
+    }
+
+    //contacto luna-manos
+    if (f_rigth_hand.isTouchingBody(fmoon) || f_left_hand.isTouchingBody(fmoon)) {
+      if (moon_is_moving) {
+        fmoon.setStatic(true);
+      } else {
+        fmoon.setStatic(false);
+      }
     }
 
     //cometa
