@@ -21,7 +21,7 @@ class BedSpaceTransition implements Scene{
   }
   
   void drawScene(){
-    println("(" + mouseX + "," + mouseY +")");
+    println("(" + mouseX + "," + mouseY +")");   
     fill(0, map(dist(0, 0, w2, h2), 0, d2, 255, 5));
     rect(0, 0, width, height);
     fill(255);

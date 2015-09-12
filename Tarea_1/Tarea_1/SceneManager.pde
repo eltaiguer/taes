@@ -20,7 +20,6 @@ class SceneManager{
       // escena 3
       // transicion 3
       // escena 4
-      // transicion 4
     };
 
     scenes =allScenes;

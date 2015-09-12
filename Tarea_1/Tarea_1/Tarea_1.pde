@@ -43,6 +43,7 @@ SceneManager manager;
 
 boolean stopDraw = false;
 
+<<<<<<< HEAD
 void setup() {
   size(1280, 960);
 
