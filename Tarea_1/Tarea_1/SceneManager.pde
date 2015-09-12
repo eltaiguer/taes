@@ -9,8 +9,7 @@ class SceneManager{
     Scene [] allScenes = {
       new Bed(),
       new BedSpaceTransition(),
-
-      new SpaceSkyTransition(),
+      new Space(),
       new SpaceSkyTransition(),
       // hay que respetar este orden
       // porque luego se referencia por indice

@@ -15,6 +15,7 @@ SimpleOpenNI  context;
 // Joints
 PVector com = new PVector();
 PVector com2d = new PVector();
+PVector com2dP = new PVector();
 
 PVector head = new PVector();
 PVector head2d = new PVector();
@@ -87,6 +88,10 @@ void updateJointsPosition() {
   for (int i=0; i<userList.length; i++) {
 
     if (context.isTrackingSkeleton(userList[i])) {
+
+      if (!Float.isNaN(com2d.x) && !Float.isNaN(com2d.y)) {
+        com2dP = com2d;
+      }
 
       // Get Center of Mass
       if (context.getCoM(userList[i], com)) {
