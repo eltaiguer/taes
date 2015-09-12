@@ -21,7 +21,7 @@ class SkyWaterTransition implements Scene{
     // -----------------------------------
     // Cloud1
     // -----------------------------------
-    cloud1 = loadImage("cloud_1.png");
+    cloud1 = loadImage("cloud0.png");
     cloud1.resize(366,200);
     x1=0;
     y1=650;
@@ -29,7 +29,7 @@ class SkyWaterTransition implements Scene{
     // -----------------------------------
     // Cloud2
     // -----------------------------------
-    cloud2 = loadImage("cloud_2.png");
+    cloud2 = loadImage("cloud1.png");
     cloud2.resize(432,200);
     x2=400;
     y2=750;

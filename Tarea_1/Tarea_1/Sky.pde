@@ -1,139 +1,120 @@
+PImage candy0,candy1,candy2,candy3,candy4;
+
 class Sky implements Scene{
-  PImage sky;
-  PImage cloud1,cloud2;
-  PImage candy1,candy2,candy3,candy4,candy5;
-  
-  boolean clouds;
 
-  int x1,y1;
-  int x2,y2;
-  
-  int xc1,yc1,xc2,yc2,xc3,yc3,xc4,yc4,xc5,yc5;
+PImage sky;
+PImage cloud1,cloud2;
+FBox cloudBox;
+FBox rightHandToRightShoulder,rightShoulderToLeftShoulder, leftShoulderToleftHand;
 
-  int velocity;
-  
   public Sky(){
-    
+
+    // Create background image
     sky = createImage(width, height, RGB);
-    for(int i = 0; i < width; i++){
-      for(int j = 0; j < height; j++){
-        sky.pixels[i + j * width] = lerpColor(#157ABC, #66B9F0, (float)j/height);
-      }
+      for(int i = 0; i < width; i++){
+        for(int j = 0; j < height; j++){
+          sky.pixels[i + j * width] = lerpColor(#157ABC, #66B9F0, (float)j/height);
+        }
     }
-
-    clouds = true;
-
-    velocity = 1;
     
-    // -----------------------------------
-    // Candies
-    // -----------------------------------
+    // Cloud images
+    cloud1 = loadImage("cloud0.png");
+    cloud1.resize(400,300);
+    
+    // Candy images
+    candy0 = loadImage("candy0.png");
+    candy0.resize(60,60);
+
     candy1 = loadImage("candy1.png");
-    xc1 = (int)random(100,300); yc1 = 0;
-    candy1.resize(100,100);
-    
+    candy1.resize(60,60);
+
     candy2 = loadImage("candy2.png");
-    xc2 = (int)random(400,600); yc2 = 0;
-    candy2.resize(100,100);
-    
+    candy2.resize(60,60);
+
     candy3 = loadImage("candy3.png");
-    xc3 = (int)random(300,500); yc3 = 0;
-    candy3.resize(100,100);
-    
+    candy3.resize(60,60);
+
     candy4 = loadImage("candy4.png");
-    xc4 = (int)random(400,600); yc4 = 0;
-    candy4.resize(100,100);
+    candy4.resize(60,60);
+
+    // fisica cloud's box
+    cloudBox = new FBox(200, 10);
+    cloudBox.setPosition(400, 600);
+    cloudBox.attachImage(cloud1); 
+    cloudBox.setStatic(true);
+    world.add(cloudBox);
     
-    candy5 = loadImage("candy5.png");
-    xc5 = (int)random(200,300); yc5 = 0;
-    candy5.resize(100,100);
+    rightHandToRightShoulder = new FBox(100,5);
+    world.add(rightHandToRightShoulder);
     
-    // -----------------------------------
-    // Cloud1
-    // -----------------------------------
-    cloud1 = loadImage("cloud_1.png");
-    cloud1.resize(366,200);
-
-    x1=0;
-    y1=650;
-
-    // -----------------------------------
-    // Cloud2
-    // -----------------------------------
-
-    cloud2 = loadImage("cloud_2.png");
-    cloud2.resize(732,400);
-    x2=400;
-    y2=960;
+    rightShoulderToLeftShoulder = new FBox(50,5);
+    world.add(rightHandToRightShoulder); 
+    
+    leftShoulderToleftHand  = new FBox(100,5);
+    world.add(rightHandToRightShoulder);
   }
-  
+
   void closeScene(){}
 
   void initialScene(){}
-  
-  void drawScene(){
-    background(sky);
-    drawClouds(false);
-  }
-  
+
   String getSceneName(){return "Sky";};
 
-  void drawClouds(boolean dirH){
-    /*if(clouds && dirH){
-      x1 = x1 + velocity;
-      image(cloud1, x1, y1);
-      
-      x2 = x2 - velocity;
-      image(cloud2, x2, y2);
-    }else if(clouds){
-      y1 = y1 - velocity;
-      image(cloud1, x1, y1);
-      
-      y2 = y2 - velocity;
-      image(cloud2, x2, y2);
-    }*/
+  void drawScene(){
+    background(sky);
+    updateCloudPosition();
+    updateArmsPosition();
+    world.step();
+    world.draw();
+  }
+  
+  void updateArmsPosition(){
+    rightHandToRightShoulder.adjustPosition(rightHand2d.x,rightHand2d.y);
+    rightHandToRightShoulder.setWidth(dist(rightHand2d, rightShoulder2d));
+    rightHandToRightShoulder.adjustAngle(PVector.angleBetween(rightHand2d, rightShoulder2d));
     
-    image(cloud2, com2d.x*2-250, 730);
+    rightShoulderToLeftShoulder.adjustPosition(rightShoulder2d.x, rightShoulder2d.y);
+    rightShoulderToLeftShoulder.setWidth(dist(rightShoulder2d,leftShoulder2d));
+    rightShoulderToLeftShoulder.adjustAngle(PVector.angleBetween(rightShoulder2d, leftShoulder2d));
     
-    // Candies
-    yc1 = yc1 + 10;
-    image(candy1, xc1, yc1);
-    
-    if(yc1 > 600){
-      yc2 = yc2 + 10;
-      image(candy2, xc2, yc2);
-    }
-    
-    if(yc2 > 800){
-      yc3 = yc3 + 10;
-      image(candy3, xc3, yc3);
-    }
-    
-    if(yc3 > 900){
-      yc4 = yc4 + 10;
-      image(candy4, xc4, yc4);
-    }
-    
-    if(yc4 > 900){
-      yc5 = yc5 + 20;
-      image(candy5, xc5, yc5);
-    }
+    leftShoulderToleftHand.adjustPosition(leftShoulder2d.x,leftShoulder2d.y);
+    leftShoulderToleftHand.setWidth(dist(leftShoulder2d,leftHand2d));
+    leftShoulderToleftHand.adjustAngle(PVector.angleBetween(leftShoulder2d, leftHand2d));
   }
 
-  void skyMouseReleased(){
-    if ((mouseX > x1) && (mouseX < (x1+cloud1.width)) && (mouseY > y1) && (mouseY < (y1+cloud1.height))){
-      println("Click on cloud1");
-    }
-    if ((mouseX > x2) && (mouseX < (x2+cloud2.width)) && (mouseY > y2) && (mouseY < (y2+cloud2.height))){
-      println("Click on cloud2");
-    }
+  void updateCloudPosition(){    
+    //cloudBox.setPosition(com2d.x*2-250,800);
+    cloudBox.setPosition(mouseX,800);
+  }
+}
+
+void mousePressed() {
+    
+  // Creates a new circle to wrap the candy image
+  FCircle myCircle = new FCircle(60);
+  myCircle.setPosition(mouseX, mouseY);
+  
+  // Creates and add a new candy
+  int candySelector = (int)random(5);
+  
+  switch(candySelector){
+    case 0:
+      myCircle.attachImage(candy0);
+      break;
+    case 1:
+      myCircle.attachImage(candy1);
+      break;
+    case 2:
+      myCircle.attachImage(candy2);
+      break;
+    case 3:
+      myCircle.attachImage(candy3);
+      break;
+    case 4:
+      myCircle.attachImage(candy4);
+      break;
   }
 
-  void skyKeyPressed() {
-    if (key == 'v') {
-      velocity = velocity+1;
-    } else if (key == 'b'){
-      velocity = velocity-1;
-    }
-  }
+  // Add candy to the world
+  world.add(myCircle);
 }
