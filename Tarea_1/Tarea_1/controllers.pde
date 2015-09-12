@@ -106,7 +106,6 @@ public class ControlFrame extends PApplet {
     if( n == "bang7") {
       manager.activate(6);
     }
-    
   }
 
   public void draw() {

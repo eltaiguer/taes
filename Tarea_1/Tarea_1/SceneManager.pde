@@ -9,15 +9,18 @@ class SceneManager{
     Scene [] allScenes = {        
       new Bed(),
       new BedSpaceTransition(),
+      
+      new SpaceSkyTransition(),
       new SpaceSkyTransition(),
       // hay que respetar este orden 
       // porque luego se referencia por indice
+      new Sky(),
       // escena 2
       new SpaceSkyTransition()
       // escena 3
       // transicion 3
       // escena 4
-      // transicion 4    
+      // transicion 4
     };
 
     scenes =allScenes;
