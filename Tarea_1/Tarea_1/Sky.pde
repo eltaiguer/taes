@@ -93,17 +93,6 @@ class Sky implements Scene{
       image(cloud2, x2, y2);
     }*/
     
-    // update the cam
-    context.update();
-    // draw the skeleton if it's available
-    int[] userList = context.getUsers();
-    for(int i=0;i<userList.length;i++){
-      // draw the center of mass
-      if(context.getCoM(userList[i],com)){
-        context.convertRealWorldToProjective(com,com2d);
-      }
-    }
-    
     image(cloud2, com2d.x*2-250, 730);
     
     // Candies
