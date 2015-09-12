@@ -1,16 +1,17 @@
 class BedSpaceTransition implements Scene{
-  
+
   ArrayList<PVector> stars = new ArrayList<PVector>();
-  float h2;//=height2/2
-  float w2;//=width2/2
-  float d2;//=diagonal/2
+  float h2;
+  float w2;
+  float d2;
   Timer timer;
-  int width2=640;
-  int height2=height/2;
-  
+  int width2 = kWidth;
+  int height2 = height/2;
+
   public BedSpaceTransition(){}
+
   void closeScene(){}
-  
+
   void initialScene(){
     w2=width2/2;
     h2= height2/2;
@@ -19,32 +20,30 @@ class BedSpaceTransition implements Scene{
     timer = new Timer();
     timer.startTimer();
   }
-  
+
   void drawScene(){
-    println("(" + mouseX + "," + mouseY +")");   
+    println("(" + mouseX + "," + mouseY +")");
     fill(0, map(dist(0, 0, w2, h2), 0, d2, 255, 5));
     rect(0, 0, width, height);
     fill(255);
-  
+
     for (int i = 0; i<20; i++) {   // star init
       stars.add(new PVector(random(width), random(height), random(1, 3)));}
-  
+
     for (int i = 0; i<stars.size(); i++) {
-      float x =stars.get(i).x;//local vars
+      float x =stars.get(i).x;
       float y =stars.get(i).y;
       float d =stars.get(i).z;
-  
-      /* movement+"glitter"*/
+
       stars.set(i, new PVector(x-map(0, 0, width2, -0.05, 0.05)*(w2-x), y-map(0, 0, height2, -0.05, 0.05)*(h2-y), d+0.2-0.6*noise(x, y, frameCount)));
-      
+
       if (d>3||d<-3) stars.set(i, new PVector(x, y, 3));
       if (x<0||x>width||y<0||y>height) stars.remove(i);
       if (stars.size()>1000) stars.remove(1);
-      ellipse(x, y, d, d);//draw stars}
-      //println("scene " + timer.getTime());
+      ellipse(x, y, d, d);
     }
   }
-  
+
   String getSceneName(){return "BedSpaceTransition";};
-  
+
 }

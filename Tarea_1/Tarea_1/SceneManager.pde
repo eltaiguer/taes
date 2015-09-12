@@ -1,23 +1,23 @@
 class SceneManager{
 
-  Scene[] scenes;  
+  Scene[] scenes;
   Scene actualScene;
   int actualSceneNr;
 
   SceneManager(){
-    
-    Scene [] allScenes = {        
+
+    Scene [] allScenes = {
       new Bed(),
       new BedSpaceTransition(),
-      
+
       new SpaceSkyTransition(),
       new SpaceSkyTransition(),
-      // hay que respetar este orden 
+      // hay que respetar este orden
       // porque luego se referencia por indice
       new Sky(),
       // escena 2
-      new SpaceSkyTransition()
-      // escena 3
+      new SpaceSkyTransition(),
+      new Water()
       // transicion 3
       // escena 4
     };
@@ -51,10 +51,9 @@ class SceneManager{
   }
 }
 
-
 // Escena
 interface Scene
-{ 
+{
     void initialScene();
     void drawScene();
     void closeScene();
@@ -62,12 +61,10 @@ interface Scene
 }
 
 class Example implements Scene
-{   
+{
   public Example(){};
-
   void closeScene(){};
   void initialScene(){};
   void drawScene(){};
   String getSceneName(){return "Example";};
-
 }

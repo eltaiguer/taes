@@ -36,14 +36,14 @@ PVector rightShoulder2d = new PVector();
 
 PVector leftShoulder = new PVector();
 PVector leftShoulder2d = new PVector();
-// ----------------------------
 
-// para cambiar fluidamente entre las escenas
 SceneManager manager;
 
 boolean stopDraw = false;
 
-<<<<<<< HEAD
+int kWidth = 640;
+int kHeight = 480;
+
 void setup() {
   size(1280, 960);
 
@@ -65,19 +65,13 @@ void setup() {
   frameRate(30);
   strokeWeight(3);
   smooth();
-
-  //---------------------------
-  // enable depthMap generation
   context.enableDepth();
-
-  //--------------------------------------------
-  // enable skeleton generation for all joints
   context.enableUser();
 }
 
 void drawJoint(PVector joint) {
-  float x_coord  = map(joint.x, 0, 640, 0, 1280);
-  float y_coord = map(joint.y, 0, 480, 0, 960);
+  float x_coord  = map(joint.x, 0, kWidth, 0, width);
+  float y_coord = map(joint.y, 0, kHeight, 0, height);
   ellipse(x_coord, y_coord, 50, 50);
 }
 
@@ -117,7 +111,7 @@ void updateJointsPosition() {
       // Get left foot
       context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_FOOT, leftFoot);
       context.convertRealWorldToProjective(leftFoot, leftFoot2d);
-      
+
       // Get right shoulder
       context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_SHOULDER, rightShoulder);
       context.convertRealWorldToProjective(rightShoulder, rightShoulder2d);
@@ -131,7 +125,7 @@ void updateJointsPosition() {
 
 void draw() {
   updateJointsPosition();
-  
+
   if (!stopDraw) manager.actualScene.drawScene();
 
   fill(0, 255, 0);
