@@ -1,5 +1,6 @@
 class Space implements Scene{
   //fondo estrellas
+  int cant_stars = 2000;
   ArrayList<PVector> stars = new ArrayList();
   PVector direction;
   float speed;
@@ -15,15 +16,15 @@ class Space implements Scene{
   FWorld fworld;
   FCircle fcircle;
 
-  public Space(){}
+  public Space() {}
 
-  void closeScene(){}
+  void closeScene() {}
 
-  void initialScene(){
+  void initialScene() {
     //fondo
     size(1280, 760);
-    for (int i=0;i<2000;i++) {
-      PVector P = new PVector(random(2*width), random(2*height));
+    for (int i = 0; i < cant_stars; i++) {
+      PVector P = new PVector(random(2 * width), random(2 * height));
       stars.add(P);
     }
     smooth();
@@ -48,12 +49,12 @@ class Space implements Scene{
     fworld.add(fcircle);
   }
 
-  void drawScene(){
+  void drawScene() {
     //fondo
     background(#040e2a);
     noStroke();
     fill(-1);
-    for (int i=0;i<stars.size();i++) {
+    for (int i = 0; i < stars.size(); i++) {
       PVector P = stars.get(i);
       PVector M;
       if (!Float.isNaN(com2d.x) && !Float.isNaN(com2d.y)) {
@@ -63,18 +64,16 @@ class Space implements Scene{
       }
       P.add(M);
       float d = dist(P.x, P.y, width/2, height/2);
-      d = map(d, 0, width/2, 0, 3);
+      d       = map(d, 0, width/2, 0, 3);
       ellipse(P.x, P.y, d, d);
     }
-    println("pmouseX-mouseX: "+ (pmouseX-mouseX) + " - pmouseY-mouseY: " + (pmouseY-mouseY));
-    println("com2dP.x-com2d.x: "+ (com2dP.x-com2d.x) + " - com2dP.y-com2d.y: " + (com2dP.y-com2d.y));
 
     //cometa
     move();
     if (!Float.isNaN(com2d.x) && !Float.isNaN(com2d.y)) {
       steer(com2d.x, com2d.y);
     } else {
-      steer(640, 320);
+      steer(width/2, height/2);
     }
     comet.display();
 
@@ -85,78 +84,74 @@ class Space implements Scene{
 
   class Comet
   {
-    PVector [] location;
+    PVector[] location;
     float ellipseSize;
 
     color c1;
     color c2;
 
-    Comet (float x, float y)
+    Comet(float x, float y)
     {
-      location = new PVector [round (random (15, 25))];
-      location[0] = new PVector (x, y);
+      location    = new PVector[round(random(15, 25))];
+      location[0] = new PVector(x, y);
 
       for (int i = 1; i < location.length; i++)
       {
-        location[i] = location[0].get ();
+        location[i] = location[0].get();
       }
-      ellipseSize = random (6, 40);
+      ellipseSize = random(6, 40);
       c1 = #ffedbc;
       c2 = #A75265;
     }
 
-    PVector getHead ()
+    PVector getHead()
     {
-      return location [location.length-1].get();
+      return location[location.length-1].get();
     }
 
-    void setHead (PVector pos)
+    void setHead(PVector pos)
     {
-      location [location.length-1]= pos.get();
+      location[location.length-1] = pos.get();
 
-      updateBody ();
+      updateBody();
     }
 
-    // HELPERS ---------------
-
-    void updateBody ()
+    void updateBody()
     {
-      for (int i = 0; i < location.length-1; i++)
+      for (int i=0; i < location.length-1; i++)
       {
-        location [i] = location [i+1];
+        location[i] = location[i+1];
       }
     }
-
-    // DISPLAY --------------------
 
     void display ()
     {
       noStroke();
       for (int i = 0; i < location.length; i++)
       {
-        color c = lerpColor (c1, c2, map (i, 0, location.length, 1, 0 ) );
-        float s = map (i, 0, location.length, 1, ellipseSize  );
+        color c = lerpColor(c1, c2, map(i, 0, location.length, 1, 0));
+        float s = map(i, 0, location.length, 1, ellipseSize);
 
-        fill (c);
-        ellipse (location[i].x, location [i].y, s, s);
+        fill(c);
+        ellipse(location[i].x, location[i].y, s, s);
       }
     }
   }
 
-  void steer (float x, float y)
+  void steer(float x, float y)
   {
     PVector location = comet.getHead();
 
-    float angle = atan2 (y-location.y, x -location.x);
+    float angle = atan2(y - location.y, x - location.x);
 
-    PVector force = new PVector (cos (angle), sin (angle));
-    force.mult (forceStrength);
+    PVector force = new PVector(cos(angle), sin(angle));
+    force.mult(forceStrength);
 
-    direction.add (force);
+    direction.add(force);
     direction.normalize();
   }
 
-  void move ()
+  void move()
   {
     PVector location = comet.getHead();
     PVector velocity = direction.get();

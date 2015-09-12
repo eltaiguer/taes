@@ -13,36 +13,36 @@ SimpleOpenNI  context;
 
 // ----------------------------
 // Joints
-PVector com = new PVector();
-PVector com2d = new PVector();
+PVector com    = new PVector();
+PVector com2d  = new PVector();
 PVector com2dP = new PVector();
 
-PVector head = new PVector();
+PVector head   = new PVector();
 PVector head2d = new PVector();
 
-PVector rightHand = new PVector();
+PVector rightHand   = new PVector();
 PVector rightHand2d = new PVector();
 
-PVector leftHand = new PVector();
+PVector leftHand   = new PVector();
 PVector leftHand2d = new PVector();
 
-PVector rightFoot = new PVector();
+PVector rightFoot   = new PVector();
 PVector rightFoot2d = new PVector();
 
-PVector leftFoot = new PVector();
+PVector leftFoot   = new PVector();
 PVector leftFoot2d = new PVector();
 
-PVector rightShoulder = new PVector();
+PVector rightShoulder   = new PVector();
 PVector rightShoulder2d = new PVector();
 
-PVector leftShoulder = new PVector();
+PVector leftShoulder   = new PVector();
 PVector leftShoulder2d = new PVector();
 
 SceneManager manager;
 
 boolean stopDraw = false;
 
-int kWidth = 640;
+int kWidth  = 640;
 int kHeight = 480;
 
 void setup() {
@@ -71,7 +71,7 @@ void setup() {
 }
 
 void drawJoint(PVector joint) {
-  float x_coord  = map(joint.x, 0, kWidth, 0, width);
+  float x_coord = map(joint.x, 0, kWidth, 0, width);
   float y_coord = map(joint.y, 0, kHeight, 0, height);
   ellipse(x_coord, y_coord, 50, 50);
 }
@@ -90,7 +90,8 @@ void updateJointsPosition() {
     if (context.isTrackingSkeleton(userList[i])) {
 
       if (!Float.isNaN(com2d.x) && !Float.isNaN(com2d.y)) {
-        com2dP = com2d;
+        com2dP.x = com2d.x;
+        com2dP.y = com2d.y;
       }
 
       // Get Center of Mass
