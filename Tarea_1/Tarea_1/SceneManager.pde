@@ -10,16 +10,14 @@ class SceneManager{
       new Bed(),
       new BedSpaceTransition(),
       new Space(),
-      new SpaceSkyTransition(),      
+      new SpaceSkyTransition(),
       new Sky(),
-      // escena 2
       new SkyWaterTransition(),
-      new Water()
-      // transicion 3
-      // escena 4
+      new Water(),
+      new WaterBedTransition()
     };
 
-    scenes =allScenes;
+    scenes = allScenes;
     actualSceneNr = 0;
     scenes[0].initialScene();
     actualScene = scenes[0];

@@ -62,9 +62,7 @@ void setup() {
     return;
   }
 
-  //stroke(0, 0, 255);
   frameRate(30);
-  //strokeWeight(3);
   smooth();
   context.enableDepth();
   context.enableUser();
@@ -77,9 +75,6 @@ void drawJoint(PVector joint) {
 }
 
 void updateJointsPosition() {
-
-  //stroke(0, 0, 0);
-  // update the cam
   context.update();
 
   // draw the skeleton if it's available
