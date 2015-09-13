@@ -42,6 +42,22 @@ class Sky implements Scene{
     cloudBox.attachImage(cloud1);
     cloudBox.setStatic(true);
     world.add(cloudBox);
+    
+    // 
+    rightShoulderToLeftShoulder = new FBox(150, 10);
+    rightShoulderToLeftShoulder.setStatic(true);
+    rightShoulderToLeftShoulder.setDrawable(false);
+    world.add(rightShoulderToLeftShoulder);
+    
+    rightHandToRightShoulder = new FBox(50, 10);
+    rightHandToRightShoulder.setStatic(true);
+    rightHandToRightShoulder.setDrawable(false);
+    world.add(rightHandToRightShoulder);
+    
+    leftShoulderToleftHand = new FBox(50, 10);
+    leftShoulderToleftHand.setStatic(true);
+    leftShoulderToleftHand.setDrawable(false);
+    world.add(leftShoulderToleftHand);
   }
 
   void closeScene(){}
@@ -52,27 +68,33 @@ class Sky implements Scene{
 
   void drawScene(){
     background(sky);
+    
     updateCloudPosition();
+    updateArmsPosition();
+    
     world.step();
     world.draw();
   }
 
   void updateArmsPosition(){
-    /*rightHandToRightShoulder.adjustPosition(rightHand2d.x,rightHand2d.y);
-    rightHandToRightShoulder.setWidth(dist(rightHand2d.x,rightHand2d.y, rightShoulder2d.x, rightShoulder2d.y));
-    rightHandToRightShoulder.adjustRotation(PVector.angleBetween(rightHand2d, rightShoulder2d));
-
-    rightShoulderToLeftShoulder.adjustPosition(rightShoulder2d.x, rightShoulder2d.y);
-    rightShoulderToLeftShoulder.setWidth(dist(rightShoulder2d.x,rightShoulder2d.y,leftShoulder2d.x,leftShoulder2d.y));
-    rightShoulderToLeftShoulder.adjustRotation(PVector.angleBetween(rightShoulder2d, leftShoulder2d));
-
-    leftShoulderToleftHand.adjustPosition(leftShoulder2d.x,leftShoulder2d.y);
-    leftShoulderToleftHand.setWidth(dist(leftShoulder2d.x,leftShoulder2d.y,leftHand2d.x,leftHand2d.y));
-    leftShoulderToleftHand.adjustRotation(PVector.angleBetween(leftShoulder2d, leftHand2d));*/
+    if (!Float.isNaN(rightShoulder2d.y) && !Float.isNaN(com2d.x)){
+      rightShoulderToLeftShoulder.setPosition(map(com2d.x, 0, kWidth, 0, width), map(rightShoulder2d.y, 0, kHeight, 0, height));
+    }
+    
+    if (!Float.isNaN(rightHand2d.y) && !Float.isNaN(rightHand2d.x)){
+      rightHandToRightShoulder.setPosition(map(rightHand2d.x, 0, kWidth, 0, width), map(rightHand2d.y, 0, kHeight, 0, height));
+      rightHandToRightShoulder.adjustRotation(PVector.angleBetween(rightHand2d, rightShoulder2d));
+    }
+    
+    if (!Float.isNaN(leftHand2d.y) && !Float.isNaN(leftHand2d.x)){
+      leftShoulderToleftHand.setPosition(map(leftHand2d.x, 0, kWidth, 0, width), map(leftHand2d.y, 0, kHeight, 0, height));
+    }
   }
 
   void updateCloudPosition(){
-    cloudBox.adjustPosition(mouseX,800);
+    if (!Float.isNaN(com2d.x)){
+      cloudBox.setPosition(map(com2d.x, 0, kWidth, 0, width), 600);
+    }
   }
 }
 
