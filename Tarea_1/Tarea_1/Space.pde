@@ -12,7 +12,7 @@ class Space implements Scene{
   boolean moon_is_moving = false;
   int moon_width         = 225;
   int moon_height        = 225;
-  int moon_x             = 700;
+  int moon_x             = 1100;
   int moon_y             = 150;
   FWorld fworld;
   FCircle fmoon;
@@ -53,7 +53,7 @@ class Space implements Scene{
 
     //manos
     f_rigth_hand = new FCircle(75);
-    f_left_hand  = new FCircle(95);
+    f_left_hand  = new FCircle(75);
 
     f_rigth_hand.setDrawable(true);
     f_left_hand.setDrawable(true);
@@ -83,8 +83,8 @@ class Space implements Scene{
 
     //manos
     if (!Float.isNaN(rightHand2d.x) && !Float.isNaN(rightHand2d.y)) {
-      f_rigth_hand.setPosition(rightHand2d.x, rightHand2d.y);
-      f_left_hand.setPosition(leftHand2d.x, leftHand2d.y);
+      f_rigth_hand.setPosition(map(rightHand2d.x, 0, kWidth, 0, width), map(rightHand2d.y, 0, kWidth, 0, height));
+      f_left_hand.setPosition(map(leftHand2d.x, 0, kWidth, 0, width), map(leftHand2d.y, 0, kWidth, 0, height));
     } else {
       f_rigth_hand.setPosition(width/2, height/2);
       f_left_hand.setPosition(width/2, height/2);
@@ -130,7 +130,7 @@ class Space implements Scene{
       {
         location[i] = location[0].get();
       }
-      ellipseSize = random(6, 40);
+      ellipseSize = 40;
       c1 = #ffedbc;
       c2 = #A75265;
     }
