@@ -58,9 +58,9 @@ class Water implements Scene{
    //******************* BUBBLES***************************//
    if (onPressed) {
       for (int i=0;i<10;i++) {
-        float x_coord  = map(com2d.x, 0, kWidth, 0, width);
-        float y_coord = map(com2d.y, 0, kHeight, 0, height);
-        Particle newP = new Particle(/*mouseX */x_coord , /*mouseY*/y_coord, i+pts.size(), i+pts.size(),this.bubble);
+        float x_coord  = map(head2d.x, 0, kWidth, 0, width);
+        float y_coord = map(head2d.y, 0, kHeight, 0, height);
+        Particle newP = new Particle(x_coord , y_coord, i+pts.size(), i+pts.size(),this.bubble);
         pts.add(newP);
       }
     }
@@ -129,10 +129,13 @@ class Water implements Scene{
         this.factor *= -1;
       }
 
-      float x_coord  = map(com2d.x, 0, kWidth, 0, width);
-      float y_coord = map(com2d.y, 0, kHeight, 0, height);
+      float x_coord_right  = map(rightHand2d.x, 0, kWidth, 0, width);
+      float y_coord_right = map(rightHand2d.y, 0, kHeight, 0, height);
+      
+      float x_coord_left  = map(leftHand2d.x, 0, kWidth, 0, width);
+      float y_coord_left = map(leftHand2d.y, 0, kHeight, 0, height);
 
-      if (Math.abs(y_coord /*mouseY*/ - this.y) <=  100 && Math.abs(/*mouseX*/ x_coord - this.x) <= 100){
+      if ((Math.abs(y_coord_right - this.y) <=  100 && Math.abs(x_coord_right - this.x) <= 100) || (Math.abs(y_coord_left - this.y) <=  100 && Math.abs(x_coord_left - this.x) <= 100)){
         this.active = true;
       }
 
@@ -241,10 +244,11 @@ class Water implements Scene{
   }
 
   void mouseMovedLZ(){
-    float x_coord  = map(com2d.x, 0, kWidth, 0, width);
-    float y_coord = map(com2d.y, 0, kHeight, 0, height);
-    for (float j =/* mouseY*/ y_coord - ripple.riprad; j < /*mouseY*/ y_coord + ripple.riprad; j++) {
-      for (float k = x_coord /*mouseX*/ - ripple.riprad; k < /*mouseX*/ x_coord + ripple.riprad; k++) {
+    float x_coord  = map(rightHand2d.x, 0, kWidth, 0, width);
+    float y_coord = map(rightHand2d.y, 0, kHeight, 0, height);
+    
+    for (float j = y_coord - ripple.riprad; j < y_coord + ripple.riprad; j++) {
+      for (float k = x_coord - ripple.riprad; k < x_coord + ripple.riprad; k++) {
         if (j >= 0 && j < height && k>= 0 && k < width) {
           ripple.ripplemap[(int)(ripple.oldind + (j * width) + k)] += 512;
         }
