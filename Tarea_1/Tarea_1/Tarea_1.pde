@@ -129,20 +129,20 @@ void draw() {
 
   if (!stopDraw) manager.actualScene.drawScene();
 
-  fill(0, 255, 0);
-  drawJoint(com2d);
-  fill(255, 0, 0);
-  drawJoint(head2d);
-  fill(255, 255, 0);
-  drawJoint(rightHand2d);
-  fill(255, 255, 0);
-  drawJoint(leftHand2d);
-  fill(0, 255, 255);
-  drawJoint(rightFoot2d);
-  fill(0, 255, 255);
-  drawJoint(leftFoot2d);
-  drawJoint(leftShoulder2d);
-  drawJoint(rightShoulder2d);
+  // fill(0, 255, 0);
+  // drawJoint(com2d);
+  // fill(255, 0, 0);
+  // drawJoint(head2d);
+  // fill(255, 255, 0);
+  // drawJoint(rightHand2d);
+  // fill(255, 255, 0);
+  // drawJoint(leftHand2d);
+  // fill(0, 255, 255);
+  // drawJoint(rightFoot2d);
+  // fill(0, 255, 255);
+  // drawJoint(leftFoot2d);
+  // drawJoint(leftShoulder2d);
+  // drawJoint(rightShoulder2d);
 }
 
 void onNewUser(SimpleOpenNI curContext, int userId){

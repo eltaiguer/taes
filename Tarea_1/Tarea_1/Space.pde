@@ -15,7 +15,7 @@ class Space implements Scene{
   boolean moon_is_moving = false;
   int moon_width         = 225;
   int moon_height        = 225;
-  int moon_x             = 950;
+  int moon_x             = 1025;
   int moon_y             = 150;
   FWorld fworld;
   FCircle fmoon;
@@ -47,7 +47,7 @@ class Space implements Scene{
     img.resize(moon_width, moon_height);
 
     fworld  = new FWorld();
-    fworld.setGravity(0,100);
+    fworld.setGravity(0,75);
     fmoon = new FCircle(225);
     fmoon.attachImage(img);
     fmoon.setPosition(moon_x, moon_y);
@@ -58,8 +58,8 @@ class Space implements Scene{
     f_rigth_hand = new FCircle(75);
     f_left_hand  = new FCircle(75);
 
-    f_rigth_hand.setDrawable(true);
-    f_left_hand.setDrawable(true);
+    f_rigth_hand.setDrawable(false);
+    f_left_hand.setDrawable(false);
 
     fworld.add(f_rigth_hand);
     fworld.add(f_left_hand);
@@ -112,7 +112,7 @@ class Space implements Scene{
         steer(width/2, height/2);
       }
     } else {
-        steer(-500, -500);      
+        steer(-500, -500);
     }
 
     comet.display();

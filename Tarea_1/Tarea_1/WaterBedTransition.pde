@@ -43,12 +43,12 @@ class WaterBedTransition implements Scene{
         }
 
         if (!open){
-          currentHeight++;
+          currentHeight= currentHeight + 10;
         }else{
           image(bedImg,0,0);
-          currentHeight--;
+          currentHeight= currentHeight - 5;
         }
-        
+
         fill(0,0,0);
         rect(0,0,width,currentHeight);
         fill(0,0,0);
@@ -62,7 +62,7 @@ class WaterBedTransition implements Scene{
           rect(0,0,width,currentHeight);
           fill(0,0,0);
           rect(0,height - currentHeight,width,height);
-          currentHeight--;
+          currentHeight= currentHeight - 10;
         }
       }
     }

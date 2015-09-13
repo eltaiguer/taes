@@ -40,22 +40,22 @@ class Sky implements Scene{
 
     // fisica cloud's box
     cloudBox = new FBox(200, 10);
-    cloudBox.setPosition(400, 600);
+    cloudBox.setPosition(400, 800);
     cloudBox.attachImage(cloud1);
     cloudBox.setStatic(true);
     world.add(cloudBox);
-    
-    // 
+
+    //
     rightShoulderToLeftShoulder = new FBox(150, 10);
     rightShoulderToLeftShoulder.setStatic(true);
     rightShoulderToLeftShoulder.setDrawable(false);
     world.add(rightShoulderToLeftShoulder);
-    
+
     rightHandToRightShoulder = new FBox(50, 10);
     rightHandToRightShoulder.setStatic(true);
     rightHandToRightShoulder.setDrawable(false);
     world.add(rightHandToRightShoulder);
-    
+
     leftShoulderToleftHand = new FBox(50, 10);
     leftShoulderToleftHand.setStatic(true);
     leftShoulderToleftHand.setDrawable(false);
@@ -70,10 +70,10 @@ class Sky implements Scene{
 
   void drawScene(){
     background(sky);
-    
+
     updateCloudPosition();
     updateArmsPosition();
-    
+
     world.step();
     world.draw();
   }
@@ -82,12 +82,12 @@ class Sky implements Scene{
     if (!Float.isNaN(rightShoulder2d.y) && !Float.isNaN(com2d.x)){
       rightShoulderToLeftShoulder.setPosition(map(com2d.x, 0, kWidth, 0, width), map(rightShoulder2d.y, 0, kHeight, 0, height));
     }
-    
+
     if (!Float.isNaN(rightHand2d.y) && !Float.isNaN(rightHand2d.x)){
       rightHandToRightShoulder.setPosition(map(rightHand2d.x, 0, kWidth, 0, width), map(rightHand2d.y, 0, kHeight, 0, height));
       rightHandToRightShoulder.adjustRotation(PVector.angleBetween(rightHand2d, rightShoulder2d));
     }
-    
+
     if (!Float.isNaN(leftHand2d.y) && !Float.isNaN(leftHand2d.x)){
       leftShoulderToleftHand.setPosition(map(leftHand2d.x, 0, kWidth, 0, width), map(leftHand2d.y, 0, kHeight, 0, height));
     }
@@ -95,7 +95,7 @@ class Sky implements Scene{
 
   void updateCloudPosition(){
     if (!Float.isNaN(com2d.x)){
-      cloudBox.setPosition(map(com2d.x, 0, kWidth, 0, width), 600);
+      cloudBox.setPosition(map(com2d.x, 0, kWidth, 0, width), 800);
     }
   }
 }
