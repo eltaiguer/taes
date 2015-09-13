@@ -15,7 +15,7 @@ class SceneManager{
       // porque luego se referencia por indice
       new Sky(),
       // escena 2
-      new SpaceSkyTransition(),
+      new SkyWaterTransition(),
       new Water()
       // transicion 3
       // escena 4
