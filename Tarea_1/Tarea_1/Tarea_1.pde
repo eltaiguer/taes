@@ -143,9 +143,11 @@ void draw() {
   fill(255, 255, 0);
   drawJoint(leftHand2d);
   fill(0, 255, 255);
-  drawJoint(rightFoot);
+  drawJoint(rightFoot2d);
   fill(0, 255, 255);
-  drawJoint(leftFoot);
+  drawJoint(leftFoot2d);
+  drawJoint(leftShoulder2d);
+  drawJoint(rightShoulder2d);
 }
 
 void onNewUser(SimpleOpenNI curContext, int userId){
