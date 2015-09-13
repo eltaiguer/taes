@@ -5,14 +5,17 @@ class Space implements Scene{
   PVector direction;
   float speed;
   float forceStrength;
+
+  //cometa
   Comet comet;
+  boolean show_comet = true;
 
   //luna
   PImage img;
   boolean moon_is_moving = false;
   int moon_width         = 225;
   int moon_height        = 225;
-  int moon_x             = 1100;
+  int moon_x             = 950;
   int moon_y             = 150;
   FWorld fworld;
   FCircle fmoon;
@@ -44,7 +47,7 @@ class Space implements Scene{
     img.resize(moon_width, moon_height);
 
     fworld  = new FWorld();
-    fworld.setGravity(0,75);
+    fworld.setGravity(0,100);
     fmoon = new FCircle(225);
     fmoon.attachImage(img);
     fmoon.setPosition(moon_x, moon_y);
@@ -92,6 +95,7 @@ class Space implements Scene{
 
     //contacto luna-manos
     if (f_rigth_hand.isTouchingBody(fmoon) || f_left_hand.isTouchingBody(fmoon)) {
+      show_comet = false;
       if (moon_is_moving) {
         fmoon.setStatic(true);
       } else {
@@ -101,11 +105,16 @@ class Space implements Scene{
 
     //cometa
     move();
-    if (!Float.isNaN(com2d.x) && !Float.isNaN(com2d.y)) {
-      steer(com2d.x, com2d.y);
+    if (show_comet) {
+      if (!Float.isNaN(com2d.x) && !Float.isNaN(com2d.y)) {
+        steer(com2d.x, com2d.y);
+      } else {
+        steer(width/2, height/2);
+      }
     } else {
-      steer(width/2, height/2);
+        steer(-500, -500);      
     }
+
     comet.display();
 
     //luna
