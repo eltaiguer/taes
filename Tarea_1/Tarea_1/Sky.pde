@@ -100,32 +100,34 @@ class Sky implements Scene{
   }
 }
 
-void mousePressed() {
-  // Creates a new circle to wrap the candy image
-  FCircle myCircle = new FCircle(60);
-  myCircle.setPosition(mouseX, mouseY);
-
-  // Creates and add a new candy
-  int candySelector = (int)random(5);
-
-  switch(candySelector){
-    case 0:
-      myCircle.attachImage(candy0);
-      break;
-    case 1:
-      myCircle.attachImage(candy1);
-      break;
-    case 2:
-      myCircle.attachImage(candy2);
-      break;
-    case 3:
-      myCircle.attachImage(candy3);
-      break;
-    case 4:
-      myCircle.attachImage(candy4);
-      break;
+void keyPressed() {
+  if (key == ' '){
+    // Creates a new circle to wrap the candy image
+    FCircle myCircle = new FCircle(60);
+    myCircle.setPosition(random(width), -30);
+  
+    // Creates and add a new candy
+    int candySelector = (int)random(5);
+  
+    switch(candySelector){
+      case 0:
+        myCircle.attachImage(candy0);
+        break;
+      case 1:
+        myCircle.attachImage(candy1);
+        break;
+      case 2:
+        myCircle.attachImage(candy2);
+        break;
+      case 3:
+        myCircle.attachImage(candy3);
+        break;
+      case 4:
+        myCircle.attachImage(candy4);
+        break;
+    }
+  
+    // Add candy to the world
+    world.add(myCircle);
   }
-
-  // Add candy to the world
-  world.add(myCircle);
 }
