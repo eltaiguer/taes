@@ -68,12 +68,17 @@ void setup() {
   context.enableUser();
 }
 
+// DEBUG: Funcion axuliar paa dibujar los Joints
 void drawJoint(PVector joint) {
   float x_coord = map(joint.x, 0, kWidth, 0, width);
   float y_coord = map(joint.y, 0, kHeight, 0, height);
   ellipse(x_coord, y_coord, 50, 50);
 }
 
+// Si se esta trackeando un esqueleto
+// Se actualiza la posicion de cada Joint
+// y su proyeccion en 2d.
+// Estos valores son consultados por todos las escenas.
 void updateJointsPosition() {
   context.update();
 
@@ -124,11 +129,15 @@ void updateJointsPosition() {
   }
 }
 
+// El draw principal
+// 1. Actualiza la posicion de los Joints
+// 2. Dibuja la escena seleccionada
 void draw() {
   updateJointsPosition();
 
   if (!stopDraw) manager.actualScene.drawScene();
 
+  // DEBUG: Pintar Joints
   // fill(0, 255, 0);
   // drawJoint(com2d);
   // fill(255, 0, 0);

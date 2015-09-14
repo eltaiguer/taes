@@ -1,3 +1,9 @@
+/*
+ * Clase que implementa la transicion entre el cielo y el mar
+ * Un conjunto de nubes aleatoriamente posicionadas se mueven hacia arriba
+ * mientras un efecto tipo fadeOut.
+ */
+
 class SkyWaterTransition implements Scene{
   PImage sky, transition, water;
   PImage cloud0, cloud1, cloud2, cloud3, cloud4;
@@ -8,17 +14,13 @@ class SkyWaterTransition implements Scene{
   int x3,y3;
   int x4,y4;
 
-  int velocity;
-
   int transparency1;
   int transparency2;
-  int transparency3;
 
   public SkyWaterTransition(){
 
     transparency1 = 254;
     transparency2 = 0;
-    transparency3 = 0;
 
     sky = createImage(width, height, RGB);
     for(int i = 0; i < width; i++){
@@ -34,8 +36,7 @@ class SkyWaterTransition implements Scene{
       }
     }
 
-    velocity = 2;
-
+    // Carga y configuracion de nubes
     cloud0 = loadImage("cloud0.png");
     cloud0.resize(432,200);
     x0=(int)random(0,800); y0=height+200;
@@ -56,6 +57,7 @@ class SkyWaterTransition implements Scene{
     cloud4.resize(432,200);
     x4=(int)random(0,800); y4=height+200;
 
+    // Carga y adpatacion de imagen de fondo de la escena Water
     water = loadImage("data/ocean1.jpg");
     water.resize(width,height);
   }
@@ -71,7 +73,10 @@ class SkyWaterTransition implements Scene{
 
   String getSceneName(){return "Sky";};
 
-  void drawClouds(){
+  // Implementacion del efecto fadeOut mientras una serie
+  // de nubes se mueven hacia arriba.
+  // Para el fadeOut se utilizo tint.
+  void drawClouds(){  
     tint(255,255,255,transparency1);
     image(sky, 0, 0);
 
