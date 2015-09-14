@@ -1,16 +1,25 @@
 PImage candy0,candy1,candy2,candy3,candy4;
 
+/*
+ * Clase que implementa la escena del cielo.
+ * Una nube acompaña el movimiento del bailarín mientras 
+ * una lluvia de caramelos lo sofoca.
+ */
+
 class Sky implements Scene{
 
+  // Imagenes para el cielo y las nubes
   PImage sky;
   PImage cloud1,cloud2;
+  
+  // Contenedores con fisica para los objetos de la escena
+  // Permiten la interaccion entre el bailarin y los caramalos
+  // y entre los caramelos y las nubes
   FBox cloudBox;
   FBox rightHandToRightShoulder,rightShoulderToLeftShoulder, leftShoulderToleftHand;
 
   public Sky(){
-    println("width " + width);
-    println("height " + height);
-    // Create background image
+    // Se crea el background
     sky = createImage(width, height, RGB);
       for(int i = 0; i < width; i++){
         for(int j = 0; j < height; j++){
@@ -18,11 +27,11 @@ class Sky implements Scene{
         }
       }
 
-    // Cloud images
+    // Se cargan las imagenes de las nubes
     cloud1 = loadImage("cloud0.png");
     cloud1.resize(400,300);
 
-    // Candy images
+    // Se cargan los caramelos
     candy0 = loadImage("candy0.png");
     candy0.resize(60,60);
 
@@ -38,14 +47,14 @@ class Sky implements Scene{
     candy4 = loadImage("candy4.png");
     candy4.resize(60,60);
 
-    // fisica cloud's box
+    // Se crea y configura un FBox para contener a la nube
     cloudBox = new FBox(200, 10);
     cloudBox.setPosition(400, 800);
     cloudBox.attachImage(cloud1);
     cloudBox.setStatic(true);
     world.add(cloudBox);
 
-    //
+    // Se crean cuerpos con fisica para las manos y los hombres
     rightShoulderToLeftShoulder = new FBox(150, 10);
     rightShoulderToLeftShoulder.setStatic(true);
     rightShoulderToLeftShoulder.setDrawable(false);
@@ -78,7 +87,10 @@ class Sky implements Scene{
     world.draw();
   }
 
+  // updateArmsPosition actualiza la posicion de los cuerpos con fisica
+  // que modelan a los hombre y manos
   void updateArmsPosition(){
+    
     if (!Float.isNaN(rightShoulder2d.y) && !Float.isNaN(com2d.x)){
       rightShoulderToLeftShoulder.setPosition(map(com2d.x, 0, kWidth, 0, width), map(rightShoulder2d.y, 0, kHeight, 0, height));
     }
@@ -93,6 +105,7 @@ class Sky implements Scene{
     }
   }
 
+  // Actualiza la posicion de la nube para que siga al bailarin
   void updateCloudPosition(){
     if (!Float.isNaN(com2d.x)){
       cloudBox.setPosition(map(com2d.x, 0, kWidth, 0, width), 800);
@@ -100,13 +113,13 @@ class Sky implements Scene{
   }
 }
 
+// Cada vez que se presiona la barra espaciadora se genera un caramelo 
+// El mismo puede ser uno de 5 posibles y es contenido en un FCircle
 void keyPressed() {
   if (key == ' '){
-    // Creates a new circle to wrap the candy image
     FCircle myCircle = new FCircle(60);
     myCircle.setPosition(random(width), -30);
   
-    // Creates and add a new candy
     int candySelector = (int)random(5);
   
     switch(candySelector){
@@ -126,8 +139,6 @@ void keyPressed() {
         myCircle.attachImage(candy4);
         break;
     }
-  
-    // Add candy to the world
     world.add(myCircle);
   }
 }
