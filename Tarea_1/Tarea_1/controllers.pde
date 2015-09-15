@@ -4,14 +4,14 @@ public class ControlFrame extends PApplet {
   int w, h;
   ControlP5 cp5;
   Object parent;
-  
+
   public void setup() {
     size(w, h);
     frameRate(25);
     cp5 = new ControlP5(this);
 
 /////////////// Escena 1 Cama /////////////////////////////////
-    
+
     cp5.addBang("bang1")
       .setPosition(180, 10)
       .setSize(40, 20)
@@ -19,55 +19,55 @@ public class ControlFrame extends PApplet {
       ;
 
 /////////////// Transicion 1 Cama-Espacio /////////////////////////////////
-    
+
     cp5.addBang("bang2")
       .setPosition(180, 60)
       .setSize(40, 20)
       .setLabel("Activar")
-      ;    
-    
+      ;
+
   /////////////// Escena 2 Espacio /////////////////////////////////
-    
+
     cp5.addBang("bang3")
       .setPosition(180, 110)
       .setSize(40, 20)
       .setLabel("Activar")
       ;
-      
-  /////////////// Transicion 2 Espacio-agua /////////////////////////////////
-    
+
+  /////////////// Transicion 2 Espacio-Cielo /////////////////////////////////
+
     cp5.addBang("bang4")
       .setPosition(180, 160)
       .setSize(40, 20)
       .setLabel("Activar")
       ;
-  
-  /////////////// Transicion 2 Espacio-agua /////////////////////////////////
-    
+
+  /////////////// Escena 3 Cielo /////////////////////////////////
+
     cp5.addBang("bang5")
       .setPosition(180, 210)
       .setSize(40, 20)
       .setLabel("Activar")
       ;
-  
-  /////////////// Escena 3 Cielo /////////////////////////////////
-    
+
+  /////////////// Transicion 3 Cielo-Agua /////////////////////////////////
+
     cp5.addBang("bang6")
       .setPosition(180, 260)
       .setSize(40, 20)
       .setLabel("Activar")
       ;
-  
-  /////////////// Transicion 3 Cielo-Agua /////////////////////////////////
-    
+
+  /////////////// Escena 4 Agua /////////////////////////////////
+
     cp5.addBang("bang7")
       .setPosition(180, 310)
       .setSize(40, 20)
       .setLabel("Activar")
       ;
-  
-  /////////////// Escena 4 Agua /////////////////////////////////
-    
+
+  /////////////// Transición 4 Agua-Cama /////////////////////////////////
+
     cp5.addBang("bang8")
       .setPosition(180, 360)
       .setSize(40, 20)
@@ -82,7 +82,7 @@ public class ControlFrame extends PApplet {
     if( n == "bang1") {
       manager.activate(0);
     }
-    // Trancision 1 Cama-Espacio  
+    // Trancision 1 Cama-Espacio
     if( n == "bang2") {
       manager.activate(1);
     }
@@ -90,18 +90,27 @@ public class ControlFrame extends PApplet {
     if( n == "bang3") {
       manager.activate(2);
     }
-    // Transicion 2 Espacio-Agua
+    // Transicion 2 Espacio-Cielo
     if( n == "bang4") {
       manager.activate(3);
     }
-    // Escena 3 Agua
+    // Escena 3 Cielo
     if( n == "bang5") {
       manager.activate(4);
     }
-    // Transición Agua-Cama
+    // Transición 3 Cielo-Agua
     if( n == "bang6") {
       manager.activate(5);
     }
+    // Escena 4 Agua
+    if( n == "bang7") {
+      manager.activate(6);
+    }
+    // Transicion 4 Agua-Cama
+    if( n == "bang8") {
+      manager.activate(7);
+    }
+
     // Escena Cama final
     if( n == "bang7") {
       manager.activate(6);
@@ -118,20 +127,20 @@ public class ControlFrame extends PApplet {
     text("Transición Cama-Espacio",10,70);
 
     line(5,100,445,100);
-    text("Escena 2 - Espacio",10,120);  
+    text("Escena 2 - Espacio",10,120);
 
     line(5,150,445,150);
     text("Transición Espacio-Cielo",10,170);
-  
+
     line(5,200,445,200);
     text("Escena 3 - Cielo",10,220);
-     
+
     line(5,250,445,250);
     text("Transicion Cielo-Agua",10,270);
-    
+
     line(5,300,445,300);
     text("Escena 4 - Agua",10,320);
-    
+
     line(5,350,445,350);
     text("Transicion Agua-Cama",10,370);
   }
@@ -160,4 +169,3 @@ ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
   f.setVisible(true);
   return p;
 }
-

@@ -5,24 +5,30 @@ class Space implements Scene{
   PVector direction;
   float speed;
   float forceStrength;
+
+  //cometa
   Comet comet;
+  boolean show_comet = true;
 
   //luna
   PImage img;
-  int moon_width  = 225;
-  int moon_height = 225;
-  int moon_x      = 1100;
-  int moon_y      = 150;
+  boolean moon_is_moving = false;
+  int moon_width         = 225;
+  int moon_height        = 225;
+  int moon_x             = 1025;
+  int moon_y             = 150;
   FWorld fworld;
-  FCircle fcircle;
+  FCircle fmoon;
+  FCircle f_rigth_hand;
+  FCircle f_left_hand;
 
   public Space() {}
 
   void closeScene() {}
 
-  void initialScene() {
+  void initialScene(){
+
     //fondo
-    size(1280, 760);
     for (int i = 0; i < cant_stars; i++) {
       PVector P = new PVector(random(2 * width), random(2 * height));
       stars.add(P);
@@ -42,11 +48,21 @@ class Space implements Scene{
 
     fworld  = new FWorld();
     fworld.setGravity(0,75);
-    fcircle = new FCircle(225);
-    fcircle.attachImage(img);
-    fcircle.setPosition(moon_x, moon_y);
-    fcircle.setStatic(true);
-    fworld.add(fcircle);
+    fmoon = new FCircle(225);
+    fmoon.attachImage(img);
+    fmoon.setPosition(moon_x, moon_y);
+    fmoon.setStatic(true);
+    fworld.add(fmoon);
+
+    //manos
+    f_rigth_hand = new FCircle(75);
+    f_left_hand  = new FCircle(75);
+
+    f_rigth_hand.setDrawable(false);
+    f_left_hand.setDrawable(false);
+
+    fworld.add(f_rigth_hand);
+    fworld.add(f_left_hand);
   }
 
   void drawScene() {
@@ -68,13 +84,37 @@ class Space implements Scene{
       ellipse(P.x, P.y, d, d);
     }
 
+    //manos
+    if (!Float.isNaN(rightHand2d.x) && !Float.isNaN(rightHand2d.y)) {
+      f_rigth_hand.setPosition(map(rightHand2d.x, 0, kWidth, 0, width), map(rightHand2d.y, 0, kWidth, 0, height));
+      f_left_hand.setPosition(map(leftHand2d.x, 0, kWidth, 0, width), map(leftHand2d.y, 0, kWidth, 0, height));
+    } else {
+      f_rigth_hand.setPosition(width/2, height/2);
+      f_left_hand.setPosition(width/2, height/2);
+    }
+
+    //contacto luna-manos
+    if (f_rigth_hand.isTouchingBody(fmoon) || f_left_hand.isTouchingBody(fmoon)) {
+      show_comet = false;
+      if (moon_is_moving) {
+        fmoon.setStatic(true);
+      } else {
+        fmoon.setStatic(false);
+      }
+    }
+
     //cometa
     move();
-    if (!Float.isNaN(com2d.x) && !Float.isNaN(com2d.y)) {
-      steer(com2d.x, com2d.y);
+    if (show_comet) {
+      if (!Float.isNaN(com2d.x) && !Float.isNaN(com2d.y)) {
+        steer(com2d.x, com2d.y);
+      } else {
+        steer(width/2, height/2);
+      }
     } else {
-      steer(width/2, height/2);
+        steer(-500, -500);
     }
+
     comet.display();
 
     //luna
@@ -99,7 +139,7 @@ class Space implements Scene{
       {
         location[i] = location[0].get();
       }
-      ellipseSize = random(6, 40);
+      ellipseSize = 40;
       c1 = #ffedbc;
       c2 = #A75265;
     }

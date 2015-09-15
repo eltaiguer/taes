@@ -62,24 +62,24 @@ void setup() {
     return;
   }
 
-  stroke(0, 0, 255);
   frameRate(30);
-  strokeWeight(3);
   smooth();
   context.enableDepth();
   context.enableUser();
 }
 
+// DEBUG: Funcion axuliar paa dibujar los Joints
 void drawJoint(PVector joint) {
   float x_coord = map(joint.x, 0, kWidth, 0, width);
   float y_coord = map(joint.y, 0, kHeight, 0, height);
   ellipse(x_coord, y_coord, 50, 50);
 }
 
+// Si se esta trackeando un esqueleto
+// Se actualiza la posicion de cada Joint
+// y su proyeccion en 2d.
+// Estos valores son consultados por todos las escenas.
 void updateJointsPosition() {
-
-  stroke(0, 0, 0);
-  // update the cam
   context.update();
 
   // draw the skeleton if it's available
@@ -129,23 +129,29 @@ void updateJointsPosition() {
   }
 }
 
+// El draw principal
+// 1. Actualiza la posicion de los Joints
+// 2. Dibuja la escena seleccionada
 void draw() {
   updateJointsPosition();
 
   if (!stopDraw) manager.actualScene.drawScene();
 
-  fill(0, 255, 0);
-  drawJoint(com2d);
-  fill(255, 0, 0);
-  drawJoint(head2d);
-  fill(255, 255, 0);
-  drawJoint(rightHand2d);
-  fill(255, 255, 0);
-  drawJoint(leftHand2d);
-  fill(0, 255, 255);
-  drawJoint(rightFoot);
-  fill(0, 255, 255);
-  drawJoint(leftFoot);
+  // DEBUG: Pintar Joints
+  // fill(0, 255, 0);
+  // drawJoint(com2d);
+  // fill(255, 0, 0);
+  // drawJoint(head2d);
+  // fill(255, 255, 0);
+  // drawJoint(rightHand2d);
+  // fill(255, 255, 0);
+  // drawJoint(leftHand2d);
+  // fill(0, 255, 255);
+  // drawJoint(rightFoot2d);
+  // fill(0, 255, 255);
+  // drawJoint(leftFoot2d);
+  // drawJoint(leftShoulder2d);
+  // drawJoint(rightShoulder2d);
 }
 
 void onNewUser(SimpleOpenNI curContext, int userId){

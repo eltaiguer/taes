@@ -11,17 +11,13 @@ class SceneManager{
       new BedSpaceTransition(),
       new Space(),
       new SpaceSkyTransition(),
-      // hay que respetar este orden
-      // porque luego se referencia por indice
       new Sky(),
-      // escena 2
-      new SpaceSkyTransition(),
-      new Water()
-      // transicion 3
-      // escena 4
+      new SkyWaterTransition(),
+      new Water(),
+      new WaterBedTransition()
     };
 
-    scenes =allScenes;
+    scenes = allScenes;
     actualSceneNr = 0;
     scenes[0].initialScene();
     actualScene = scenes[0];
