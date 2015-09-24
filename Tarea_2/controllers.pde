@@ -1,4 +1,3 @@
-/*
 public class ControlFrame extends PApplet {
 
   int w, h;
@@ -26,53 +25,6 @@ public class ControlFrame extends PApplet {
       .setLabel("Activar")
       ;
 
-  /////////////// Escena 2 Espacio /////////////////////////////////
-
-    cp5.addBang("bang3")
-      .setPosition(180, 110)
-      .setSize(40, 20)
-      .setLabel("Activar")
-      ;
-
-  /////////////// Transicion 2 Espacio-Cielo /////////////////////////////////
-
-    cp5.addBang("bang4")
-      .setPosition(180, 160)
-      .setSize(40, 20)
-      .setLabel("Activar")
-      ;
-
-  /////////////// Escena 3 Cielo /////////////////////////////////
-
-    cp5.addBang("bang5")
-      .setPosition(180, 210)
-      .setSize(40, 20)
-      .setLabel("Activar")
-      ;
-
-  /////////////// Transicion 3 Cielo-Agua /////////////////////////////////
-
-    cp5.addBang("bang6")
-      .setPosition(180, 260)
-      .setSize(40, 20)
-      .setLabel("Activar")
-      ;
-
-  /////////////// Escena 4 Agua /////////////////////////////////
-
-    cp5.addBang("bang7")
-      .setPosition(180, 310)
-      .setSize(40, 20)
-      .setLabel("Activar")
-      ;
-
-  /////////////// Transición 4 Agua-Cama /////////////////////////////////
-
-    cp5.addBang("bang8")
-      .setPosition(180, 360)
-      .setSize(40, 20)
-      .setLabel("Activar")
-      ;
   }
 
   void controlEvent(ControlEvent theEvent) {
@@ -80,41 +32,13 @@ public class ControlFrame extends PApplet {
 
     // Escena 1 Cama
     if( n == "bang1") {
-      manager.activate(0);
+      //manager.activate(0);
     }
     // Trancision 1 Cama-Espacio
     if( n == "bang2") {
-      manager.activate(1);
-    }
-    // Escena 2 Espacio
-    if( n == "bang3") {
-      manager.activate(2);
-    }
-    // Transicion 2 Espacio-Cielo
-    if( n == "bang4") {
-      manager.activate(3);
-    }
-    // Escena 3 Cielo
-    if( n == "bang5") {
-      manager.activate(4);
-    }
-    // Transición 3 Cielo-Agua
-    if( n == "bang6") {
-      manager.activate(5);
-    }
-    // Escena 4 Agua
-    if( n == "bang7") {
-      manager.activate(6);
-    }
-    // Transicion 4 Agua-Cama
-    if( n == "bang8") {
-      manager.activate(7);
+      //manager.activate(1);
     }
 
-    // Escena Cama final
-    if( n == "bang7") {
-      manager.activate(6);
-    }
   }
 
   public void draw() {
@@ -125,32 +49,14 @@ public class ControlFrame extends PApplet {
 
     line(5,50,445,50);
     text("Transición Cama-Espacio",10,70);
-
-    line(5,100,445,100);
-    text("Escena 2 - Espacio",10,120);
-
-    line(5,150,445,150);
-    text("Transición Espacio-Cielo",10,170);
-
-    line(5,200,445,200);
-    text("Escena 3 - Cielo",10,220);
-
-    line(5,250,445,250);
-    text("Transicion Cielo-Agua",10,270);
-
-    line(5,300,445,300);
-    text("Escena 4 - Agua",10,320);
-
-    line(5,350,445,350);
-    text("Transicion Agua-Cama",10,370);
   }
 
   private ControlFrame() {
   }
   public ControlFrame(Object theParent, int theWidth, int theHeight) {
     parent = theParent;
-    w = theWidth;
-    h = theHeight;
+    w      = theWidth;
+    h      = theHeight;
   }
   public ControlP5 control() {
     return cp5;
@@ -169,4 +75,3 @@ ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
   f.setVisible(true);
   return p;
 }
-*/
