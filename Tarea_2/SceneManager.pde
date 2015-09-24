@@ -1,5 +1,5 @@
 class SceneManager{
-
+/*
   Scene[] scenes;
   Scene actualScene;
   int actualSceneNr;
@@ -61,5 +61,5 @@ class Example implements Scene
   void closeScene(){};
   void initialScene(){};
   void drawScene(){};
-  String getSceneName(){return "Example";};
+  String getSceneName(){return "Example";};*/
 }

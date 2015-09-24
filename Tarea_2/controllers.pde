@@ -1,4 +1,4 @@
-
+/*
 public class ControlFrame extends PApplet {
 
   int w, h;
@@ -169,3 +169,4 @@ ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
   f.setVisible(true);
   return p;
 }
+*/

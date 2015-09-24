@@ -1,5 +1,7 @@
+import SimpleOpenNI.*;
+
 class Joints{
-  
+
   PVector head, neck, torso;
   PVector rightHand, rightElbow, rightHip;
   PVector leftHand, leftElbow, leftHip;
@@ -12,43 +14,47 @@ class Joints{
   PVector rightFoot2d, rightShoulder2d, rightKnee2d;
   PVector leftFoot2d, leftShoulder2d, leftKnee2d;
 
-  // Constructor: Inicializar PVectors en 0?
-  Joints(){
-    head = new PVector();
-    neck = new PVector();
-    torso = new PVector();
-    rightHand  = new PVector();
-    rightElbow = new PVector();
-    rightHip = new PVector();
-    leftHand  = new PVector();
-    leftElbow = new PVector();
-    leftHip = new PVector();
-    rightFoot  = new PVector();
-    rightShoulder = new PVector();
-    rightKnee = new PVector();
-    leftFoot  = new PVector();
-    leftShoulder = new PVector();
-    leftKnee = new PVector();
+  SimpleOpenNI context;
 
-    head2d  = new PVector();
-    neck2d = new PVector();
-    torso2d = new PVector();
-    rightHand2d  = new PVector();
-    rightElbow2d = new PVector();
-    rightHip2d = new PVector();
-    leftHand2d  = new PVector();
-    leftElbow2d = new PVector();
-    leftHip2d = new PVector();
-    rightFoot2d  = new PVector();
+  // Constructor: Inicializar PVectors en 0?
+  Joints(SimpleOpenNI c){
+    head          = new PVector();
+    neck          = new PVector();
+    torso         = new PVector();
+    rightHand     = new PVector();
+    rightElbow    = new PVector();
+    rightHip      = new PVector();
+    leftHand      = new PVector();
+    leftElbow     = new PVector();
+    leftHip       = new PVector();
+    rightFoot     = new PVector();
+    rightShoulder = new PVector();
+    rightKnee     = new PVector();
+    leftFoot      = new PVector();
+    leftShoulder  = new PVector();
+    leftKnee      = new PVector();
+
+    head2d          = new PVector();
+    neck2d          = new PVector();
+    torso2d         = new PVector();
+    rightHand2d     = new PVector();
+    rightElbow2d    = new PVector();
+    rightHip2d      = new PVector();
+    leftHand2d      = new PVector();
+    leftElbow2d     = new PVector();
+    leftHip2d       = new PVector();
+    rightFoot2d     = new PVector();
     rightShoulder2d = new PVector();
-    rightKnee2d = new PVector();
-    leftFoot2d  = new PVector();
-    leftShoulder2d = new PVector();
-    leftKnee2d = new PVector();
+    rightKnee2d     = new PVector();
+    leftFoot2d      = new PVector();
+    leftShoulder2d  = new PVector();
+    leftKnee2d      = new PVector();
+
+    context = c;
   }
 
   // Actualizar la posicion segun usuario
-  void updateJointsPosition(user){
+  void updateJointsPosition(int user){
     // Get Head
     context.getJointPositionSkeleton(user, SimpleOpenNI.SKEL_HEAD, head);
     context.convertRealWorldToProjective(head, head2d);
