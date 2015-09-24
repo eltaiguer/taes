@@ -14,78 +14,79 @@ ArrayList<Joints> jointsList;
 int kWidth  = 640;
 int kHeight = 480;
 
-//timer
-int interval         = 20000; //tiempo en milisegundos
-boolean saved_file   = false;
-int lastRecordedTime = 0;
-
-String filename = "joints.txt";
+//variables de grabacion de movimiento
+boolean recording = false;
+boolean do_record = false;
+String filename   = "joints.txt";
 
 void setup() {
-  size(1280, 960);
+    //size(1280, 960);
+    size (32,32);
 
-  cf = addControlFrame("Controladores", 450, 700);
-  // manager = new SceneManager();
+    cf = addControlFrame("Controladores", 450, 700);
+    // manager = new SceneManager();
 
-  // cosas kinect
-  context = new SimpleOpenNI(this);
-  if (context.isInit() == false) {
-    println("Can't init SimpleOpenNI, maybe the camera is not connected!");
-    exit();
-    return;
-  }
+    // cosas kinect
+    context = new SimpleOpenNI(this);
+    if (context.isInit() == false) {
+        println("Can't init SimpleOpenNI, maybe the camera is not connected!");
+        exit();
+        return;
+    }
 
-  jointsList = new ArrayList<Joints>();
+    jointsList = new ArrayList<Joints>();
 
-  frameRate(30);
-  smooth();
-  context.enableDepth();
-  context.enableUser();
+    frameRate(30);
+    smooth();
+    context.enableDepth();
+    context.enableUser();
 }
-
 
 // Si se esta trackeando un esqueleto
 // Se actualiza la posicion de cada Joint
 // y su proyeccion en 2d.
 // Estos valores son consultados por todos las escenas.
 void update() {
-  context.update();
+    context.update();
+    // draw the skeleton if it's available
+    int[] userList = context.getUsers();
 
-  // draw the skeleton if it's available
-  int[] userList = context.getUsers();
-
-  for (int i=0; i<userList.length; i++) {
-
-    if (context.isTrackingSkeleton(userList[i])) {
-      Joints newFrame = new Joints(context);
-      newFrame.updateJointsPosition(userList[i]);
-      jointsList.add(newFrame);
+    if (do_record) {
+        if (!recording)
+            println("Comienza grabación");
+        recording = true;
+        for (int i = 0; i < userList.length; i++) {
+            if (context.isTrackingSkeleton(userList[i])) {
+                Joints newFrame = new Joints(context);
+                newFrame.updateJointsPosition(userList[i]);
+                jointsList.add(newFrame);
+            }
+        }
     }
-  }
 }
 
 // El draw principal
 // 1. Actualiza la posicion de los Joints
 // 2. Dibuja la escena seleccionada
 void draw() {
-  update();
-  lastRecordedTime = millis();
-  if (lastRecordedTime > interval && !saved_file) {
-      println("guardo archivo");
+    update();
 
-      saved_file = true;
-      try {
-          writeJointsFile(filename, jointsList);
-      } catch(FileNotFoundException e) {
-          //handle exception
-      }
-  }
-  //if (!stopDraw) manager.actualScene.drawScene();
+    //guardar datos
+    if (recording && !do_record) {
+        println("Grabación detenida");
+        recording = false;
+        try {
+            writeJointsFile(filename, jointsList);
+            println("Datos guardados.");
+        } catch(FileNotFoundException e) {
+            println("Error. No se pudo generar el archivo.");
+        }
+    }
 }
 
 void onNewUser(SimpleOpenNI curContext, int userId){
-  println("onNewUser - userId: " + userId);
-  curContext.startTrackingSkeleton(userId);
+    println("onNewUser - userId: " + userId);
+    curContext.startTrackingSkeleton(userId);
 }
 
 public void writeJointsFile(String filename, ArrayList<Joints> joints) throws FileNotFoundException {

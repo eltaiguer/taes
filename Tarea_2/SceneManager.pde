@@ -1,4 +1,4 @@
-class SceneManager{
+class SceneManager {
 /*
   Scene[] scenes;
   Scene actualScene;
