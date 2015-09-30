@@ -30,6 +30,25 @@ void setup() {
        context.enableDepth();
        context.enableRGB();
        println("curFramePlayer: " + context.curFramePlayer());
+    } else {
+        //inicializo grabacion
+        context = new SimpleOpenNI(this);
+        if(context.isInit() == false){
+            println("Can't init SimpleOpenNI, maybe the camera is not connected!");
+            exit();
+            return;
+        }
+
+        // recording
+        // enable depthMap generation
+        context.enableDepth();
+
+        // setup the recording
+        context.enableRecorder(recordPath);
+
+        // select the recording channels
+        context.addNodeToRecording(SimpleOpenNI.NODE_DEPTH,true);
+        context.addNodeToRecording(SimpleOpenNI.NODE_IMAGE,true);
     }
 
     //smooth();
@@ -44,29 +63,12 @@ void draw() {
 
             //si ya existe un archivo lo elimino
             File file = new File(sketchPath("data/"+recordPath));
-            if (file.delete())
+            /*if (file.delete())
                 println("Archivo borrado.");
             else
-                println("No existe archivo.");
+                println("No existe archivo.");*/
 
-            //inicializo grabacion
-            context = new SimpleOpenNI(this);
-            if(context.isInit() == false){
-                println("Can't init SimpleOpenNI, maybe the camera is not connected!");
-                exit();
-                return;
-            }
 
-            // recording
-            // enable depthMap generation
-            context.enableDepth();
-
-            // setup the recording
-            context.enableRecorder(recordPath);
-
-            // select the recording channels
-            context.addNodeToRecording(SimpleOpenNI.NODE_DEPTH,true);
-            context.addNodeToRecording(SimpleOpenNI.NODE_IMAGE,true);
         }
 
         context.update();
