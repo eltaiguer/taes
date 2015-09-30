@@ -7,18 +7,13 @@ public class ControlFrame extends PApplet {
     public void setup() {
     size(w, h);
     frameRate(25);
+
     cp5 = new ControlP5(this);
-
-    /////////////// Escena 1 Cama /////////////////////////////////
-
     cp5.addBang("bang1")
         .setPosition(180, 10)
         .setSize(40, 20)
         .setLabel("Grabar")
         ;
-
-    /////////////// Transicion 1 Cama-Espacio /////////////////////////////////
-
     cp5.addBang("bang2")
         .setPosition(270, 10)
         .setSize(40, 20)
