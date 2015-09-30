@@ -81,6 +81,60 @@ void draw() {
                 image(context.depthImage(), 0, 0);
             }
         }
+
+        // draw timeline
+       // if(recordFlag == false){
+          int[] dmap = context.depthMap();
+          int size = context.depthMapSize();
+          int count = 0;
+
+          realImage = createImage(context.depthWidth(), context.depthHeight(), RGB);
+            for(int i = 0; i < context.depthWidth(); i++){
+              for(int j = 0; j < context.depthHeight(); j++){
+
+                int index = i + j * context.depthWidth();
+                int d = dmap[index];
+
+                if (d < 2000){
+
+                  if (index + 1 < size && dmap[index + 1] < 2000){
+                    count++;
+                  }
+
+                  if (index - 1 >= 0 && dmap[index -1] < 2000){
+                    count++;
+                  }
+
+                  if ((index + context.depthWidth() < size) && (dmap[index + context.depthWidth()] < 2000)){
+                     count++;
+                  }
+
+                  if ((index - context.depthWidth() >= 0) && (dmap[index - context.depthWidth()] < 2000)){
+                    count++;
+                  }
+
+                  if (count < 4){
+                    realImage.pixels[index] = color(255, 0, 0);
+                  }else{
+                    realImage.pixels[index] = color(0, 100, 0);
+                  }
+
+                }else{
+                  realImage.pixels[index] = color(0, 0, 0);
+                }
+                count = 0;
+              }
+          }
+
+          realImage.updatePixels();
+          image.loadPixels();
+          // escalamos las imagenes
+          image.copy(realImage, 0, 0, 640, 480, 0, 0, width, height);
+          image(image,0,0);
+          drawTimeline();
+          text("curFramePlayer: " + context.curFramePlayer(),10,10);
+         // }
+
     }
 
     //paro grabacion
