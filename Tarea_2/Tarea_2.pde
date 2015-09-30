@@ -6,6 +6,7 @@ import java.io.*;
 ControlP5 cp5;
 ControlFrame cf;
 SimpleOpenNI context;
+//SimpleOpenNI context_play;
 
 boolean recordFlag = true;
 String recordPath  = "test.oni";
@@ -16,8 +17,18 @@ PImage image;
 boolean recording = false;
 boolean do_record = false;
 
+//calibracion distancia
+int calib_dist = 3000;
+
 void setup() {
-    size(1280, 960);
+    //si ya existe un archivo lo elimino
+    File file = new File(sketchPath("data/"+recordPath));
+    if (file.delete())
+        println("Archivo borrado.");
+    else
+        println("No existe archivo.");
+
+    size(1024, 768);
     frameRate(30);
 
     cf = addControlFrame("Controladores", 450, 700);
@@ -25,33 +36,21 @@ void setup() {
     // para imagen escalada
     image = new PImage(width,height,ARGB);
 
-    if (recordFlag == false) {
-       context = new SimpleOpenNI(this,recordPath);
-       context.enableDepth();
-       context.enableRGB();
-       println("curFramePlayer: " + context.curFramePlayer());
-    } else {
-        //inicializo grabacion
-        context = new SimpleOpenNI(this);
-        if(context.isInit() == false){
-            println("Can't init SimpleOpenNI, maybe the camera is not connected!");
-            exit();
-            return;
-        }
-
-        // recording
-        // enable depthMap generation
-        context.enableDepth();
-
-        // setup the recording
-        context.enableRecorder(recordPath);
-
-        // select the recording channels
-        context.addNodeToRecording(SimpleOpenNI.NODE_DEPTH,true);
-        context.addNodeToRecording(SimpleOpenNI.NODE_IMAGE,true);
+    //grabacion
+    context = new SimpleOpenNI(this);
+    if(context.isInit() == false){
+        println("Can't init SimpleOpenNI, maybe the camera is not connected!");
+        exit();
+        return;
     }
+    // enable depthMap generation
+    context.enableDepth();
 
-    //smooth();
+    // setup the recording
+    context.enableRecorder(recordPath);
+    // select the recording channels
+    context.addNodeToRecording(SimpleOpenNI.NODE_DEPTH,true);
+    //reproduccion
 }
 
 void draw() {
@@ -60,15 +59,6 @@ void draw() {
         if (!recording) {
             println("Comienza grabación");
             recording = true;
-
-            //si ya existe un archivo lo elimino
-            File file = new File(sketchPath("data/"+recordPath));
-            /*if (file.delete())
-                println("Archivo borrado.");
-            else
-                println("No existe archivo.");*/
-
-
         }
 
         context.update();
@@ -76,12 +66,7 @@ void draw() {
         background(0, 0, 0);
 
         if ((context.nodes() & SimpleOpenNI.NODE_DEPTH) != 0) {
-            if ((context.nodes() & SimpleOpenNI.NODE_IMAGE) != 0) {
-                image(context.depthImage(), 0, 0);
-                image(context.rgbImage(), context.depthWidth() + 10, 0);
-            } else {
-                image(context.depthImage(), 0, 0);
-            }
+            image(context.depthImage(), 0, 0);
         }
 
         // draw timeline
@@ -97,21 +82,21 @@ void draw() {
                 int index = i + j * context.depthWidth();
                 int d = dmap[index];
 
-                if (d < 2000){
+                if (d < calib_dist){
 
-                  if (index + 1 < size && dmap[index + 1] < 2000){
+                  if (index + 1 < size && dmap[index + 1] < calib_dist){
                     count++;
                   }
 
-                  if (index - 1 >= 0 && dmap[index -1] < 2000){
+                  if (index - 1 >= 0 && dmap[index -1] < calib_dist){
                     count++;
                   }
 
-                  if ((index + context.depthWidth() < size) && (dmap[index + context.depthWidth()] < 2000)){
+                  if ((index + context.depthWidth() < size) && (dmap[index + context.depthWidth()] < calib_dist)){
                      count++;
                   }
 
-                  if ((index - context.depthWidth() >= 0) && (dmap[index - context.depthWidth()] < 2000)){
+                  if ((index - context.depthWidth() >= 0) && (dmap[index - context.depthWidth()] < calib_dist)){
                     count++;
                   }
 
@@ -142,7 +127,10 @@ void draw() {
     //paro grabacion
     if (recording && !do_record) {
         println("Grabación detenida");
-        recording = false;
+        recording = false; do_record = true;
+
+        context = new SimpleOpenNI(this,recordPath);
+        context.enableDepth();
     }
 }
 
