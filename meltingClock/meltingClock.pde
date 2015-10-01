@@ -1,17 +1,39 @@
+import SimpleOpenNI.*;
+import java.awt.Frame;
+import controlP5.*;
+import ddf.minim.*;
 
 
  
 PImage bg;
 PImage bgSinClock;
+PImage mano;
 MeltingClock clock;
- 
+SimpleOpenNI  context;
 
-//************** particulas
-Particle particles[]; // declare the array of Particles
-int numParticles = 0; // this is a variable that holds the number of particles
-PImage texture; // create the image object
+// ----------------------------
+// Joints
+PVector com    = new PVector();
+PVector com2d  = new PVector();
+PVector leftHand   = new PVector();
+PVector leftHand2d = new PVector();
 
-//*************************
+int kWidth  = 1024;
+int kHeight = 768;
+
+//--------------------------
+//Posicion inicial Reloj
+float RELOJ_INITIAL_X = 274;
+float RELOJ_INITIAL_Y = 274;
+
+//-----------------
+//Estados Reloj
+String INITIAL = "INITIAL"; // Reloj sin agarrar
+String EN_MANO_IZQUIERDA = "EN_MANO_IZQUIERDA"; // Agarre el reloj
+String EN_CENTRO_DE_MASA = "EN_CENTRO_DE_MASA"; // El reloj esta en el centro de masa proyectado
+String FINAL = "FINAL"; // Devolviendo el reloj
+String OVER = "OVER"; // Devolvi el reloj
+
 void setup() {
   size(1024,768);
    
@@ -23,108 +45,115 @@ void setup() {
     bgSinClock = loadImage("stage2.png");
     bgSinClock.resize(1024,768);
   
+    mano = loadImage("mano.png");
+  
     clock = new MeltingClock();
     clock.imagen = loadImage("meltingClock.png");  
   //*******dali
   
-  //****************particulas
-  // load the smoke texture
-  texture = loadImage("smoke.png");
   
-  // create the array to hold 300 Particles (it is still just room -- no particles yet)
-  particles = new Particle[300];
+ // smooth();
   
-  //***********particulas
+  // cosas kinect
+  context = new SimpleOpenNI(this);
+  if(context.isInit() == false)
+  {
+     println("Can't init SimpleOpenNI, maybe the camera is not connected!");
+     exit();
+     return;
+  }
+
+  //---------------------------
+  // enable depthMap generation
+  context.enableDepth();
+
+  //--------------------------------------------
+  // enable skeleton generation for all joints
+  context.enableUser();
+
   
-  smooth();
+
 };
 
+void drawJoinit(PVector joint) {
+  float x_coord = map(joint.x, 0, kWidth, 0, width);
+  float y_coord = map(joint.y, 0, kHeight, 0, height);
+  ellipse(x_coord, y_coord, 50, 50);
+}
+
+void updateJointsPosition() {
+  context.update();
+
+  // draw the skeleton if it's available
+  int[] userList = context.getUsers();
+
+  for (int i=0; i<userList.length; i++) {
+
+    if (context.isTrackingSkeleton(userList[i])) {
+
+      // Get Center of Mass
+      if (context.getCoM(userList[i], com)) {
+        context.convertRealWorldToProjective(com, com2d);
+      }
+
+      // Get left hand
+      context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HAND, leftHand);
+      context.convertRealWorldToProjective(leftHand, leftHand2d);      
+    }
+  }
+}
+
+
 void draw() {
-  if (clock.visible){
+   if (clock.visible ){
      image(bgSinClock, 0,0);
   } else {
      image(bg, 0,0);
+  } 
+  updateJointsPosition();
+  
+  boolean aunNoDevolviElReloj = clock.estado != OVER;
+  if (aunNoDevolviElReloj){ 
+    robarRelojDeEscena(); 
   }
+  
+  actualizarPosicionReloj(); //Muevo el reloj hasta encontrar la posicion inicial
   clock.mostrar();
-  println("mousex: " + mouseX);
-  println("mousey: " + mouseY);
   
+  //DEBUG
+  image(mano, leftHand2d.x,leftHand2d.y, 50,50);
+   //DEBUG
   
-  
-  //***************** particles
-  if (clock.visible) {
-    
-           // If there is an empty spot in the array, we add a new particle to the system  
-          if (numParticles < particles.length) {
-            // create the Particle
-            Particle p  = new Particle();
-        
-            // Give it an initial position 
-            p.x = 428;
-            p.y = 371; 
-        
-            // randomize its velocity and life time
-            p.vx = random(-.25, .25);
-            p.vy = -1 + random(-1, 1);
-            p.maxLifeTime += random(-15, 15);
-        
-            // add it to the array and update our count of the number of particles
-            particles[numParticles] = p;
-            numParticles += 1;
-          }
-        
-        
-        
-          // iterate over all of the particles and update and draw them
-          // if they have expired, remove them from the list
-          for (int i = 0; i < numParticles; i++) {
-        
-            // update the particle's position
-            particles[i].update();
-        
-            // check if it is still alive
-            if (particles[i].lifeTime < particles[i].maxLifeTime) {
-              // if it is, paint it
-              particles[i].paint();
-            }
-            else {
-              // if it isn't, replace this particle with the last one in the list
-              // and reduce the number of particles in the system
-              numParticles -= 1;
-              particles[i] = particles[numParticles];
-            }
-          }
-  }
-  
-  //************** particles
+  println("estado: " + clock.estado);
+  println("clock.x: " + clock.x);
+  println("clock.y: " + clock.y);
+  println("habilitadoPorControlUI : " + clock.habilitadoPorControlUI);
 };
 
-
+void mouseMoved(){
+  println("mouseX: " + mouseX);
+  println("mouseY: " + mouseY);
+}
+void mouseClicked(){
+  clock.habilitadoPorControlUI = !clock.habilitadoPorControlUI;
+}
 void actualizarPosicionReloj(){
-   if (clock.estado == "jointLeft"){  //El reloj recien lo agarre y lo tengo en la mano izquierda, que siga a la mano izquierda
-      int jointLeftX = mouseX;
-      int jointLeftY = mouseY;
-      clock.x = jointLeftX; 
-      clock.y = jointLeftY;
-      int xCentroMasa = 0;
-      int yCentroMasa = 0;
-      boolean posicionEnCentroMasa = Math.abs(clock.x - xCentroMasa) >= 10  && Math.abs(clock.y - yCentroMasa) >= 10;
-      if (posicionEnCentroMasa) { //Si lleve el reloj al centro de masa, proyecto el reloj en el centro de masa
-         clock.estado = "centroMasa";
-      }  
-         
-   } else if (clock.estado == "centroMasa"){  //Si tengo el reloj en el centro de masa
-      int centroMasaX = mouseX;  
-      int centroMasaY = mouseY; 
+   if (clock.estado == EN_MANO_IZQUIERDA){  //tengo el reloj en la mano izquierda, que siga la mano izquierda
+      float jointLeftX = leftHand2d.x; 
+      float jointLeftY = leftHand2d.y;
+      clock.x = jointLeftX;  
+      clock.y = jointLeftY;       
+   } else if (clock.estado == EN_CENTRO_DE_MASA){  //Si tengo el reloj en el centro de masa lo proyecto en el centro de masa
+     /* float centroMasaX = width/2;// com2d.x;  
+      float centroMasaY = height/2;//com2d.y; 
       clock.x = centroMasaX; 
       clock.y = centroMasaY;
-      
-      int xJointLeft = 0;
-      int yJointLeft = 0;
-      boolean posicionEnJointLeft = Math.abs(clock.x - xJointLeft) >= 10  && Math.abs(clock.y - yJointLeft) >= 10;
-      if (posicionEnJointLeft) { //Si agarro el reloj del centro de masa con la mano izquierda , que siga a la mano izquierda
-         clock.estado = "jointLeft";
-      }   
+      */      
+   } else { // debe seguir la mano izquierda
+      float jointLeftX = leftHand2d.x; 
+      float jointLeftY = leftHand2d.y;
+      clock.x = jointLeftX;  
+      clock.y = jointLeftY;
    } 
    
 }
@@ -132,49 +161,58 @@ void actualizarPosicionReloj(){
 //---------------------------
 // Roba el reloj de la escena 
 void robarRelojDeEscena() {
-   int RelojY = 388; 
-   int RelojX = 468;
-   boolean posicionRobarClock = false;
-   if (clock.estado == "jointLeft"){
-      int jointLeftX = mouseX;
-      int jointLeftY = mouseY;
-      posicionRobarClock = Math.abs(RelojX - jointLeftX) >= 10  && Math.abs(jointLeftY - RelojY) >= 10;
-   } else if (clock.estado == "centroMasa"){
-      int centroMasaX = mouseX;
-      int centroMasaY = mouseY; 
-     posicionRobarClock = Math.abs(RelojX - centroMasaX) >= 10  && Math.abs(centroMasaY - RelojY) >= 10;
-   }
    
-   if (clock.habilitadoPorControlUI && posicionRobarClock) { 
-      //Cambio fondo sin reloj
-       //Le doy vida al reloj y lo muestro en las posicion de la mano izquierda hasta llegar al pecho   
-       clock.visible = !clock.visible;
-       actualizarPosicionReloj();
-   }
-}
-
-void mousePressed() {  
-   robarRelojDeEscena();
-}
-
-void mouseMoved(){    
    actualizarPosicionReloj();
+   
+   boolean posicionRobarClock = false;
+   if (clock.estado == INITIAL) { //Tengo que agarrar el reloj
+      float jointLeftX = leftHand2d.x; 
+      float jointLeftY = leftHand2d.y; 
+      posicionRobarClock = jointLeftX > 0 && Math.abs(clock.x - jointLeftX) <= 20 && Math.abs(clock.y - jointLeftY) <=  20;
+      
+      if (clock.habilitadoPorControlUI && posicionRobarClock ) { //Si la mano izquierda esta en la posicion del reloj, lo agarro
+         clock.estado = EN_MANO_IZQUIERDA;
+         clock.visible = true;
+      }
+   } else if (clock.estado == EN_MANO_IZQUIERDA){ //Debo llevar el reloj hacia el centro de masa
+      float centroMasaX =  500;//com2d.x;   // CAMBIAR!!!!
+      float centroMasaY =  300;//com2d.y;   // CAMBIAR!!!!
+      posicionRobarClock = Math.abs(clock.x - centroMasaX) <= 20  && Math.abs(centroMasaY - clock.y) <= 20;
+     if (clock.habilitadoPorControlUI && posicionRobarClock ) { //Dejo el reloj en el centro de masa        
+         clock.estado = EN_CENTRO_DE_MASA;
+         clock.habilitadoPorControlUI = false; // BORRAR CUANDO SE TENGA EL CONTROL UI !!!!!
+     }
+   } else if (clock.estado == EN_CENTRO_DE_MASA){  //Debo llevar el reloj del centro de masa al cuadro
+      float jointLeftX = leftHand2d.x;
+      float jointLeftY =leftHand2d.y;
+      posicionRobarClock = jointLeftX > 0 && Math.abs(clock.x - jointLeftX) <= 20 && Math.abs(clock.y - jointLeftY) <=  20;      
+      if (clock.habilitadoPorControlUI && posicionRobarClock ) { //MARCO INICIO DEL MOVIMIENTO
+            clock.estado = FINAL;        
+      }   
+   } else if (clock.estado == FINAL){ // SI ESTOY LLEVANDO  EL RELOJ Y ALCANCE LA POSICION ORIGINAL, LO DEJO EN EL CUADRO  
+      posicionRobarClock = Math.abs(clock.x - RELOJ_INITIAL_X) <= 20 && Math.abs(clock.y - RELOJ_INITIAL_X) <=  20;      
+      if (clock.habilitadoPorControlUI && posicionRobarClock ) { //Si lleve el reloj al centro de masa, proyecto el reloj en el centro de masa
+         clock.estado = OVER;
+         clock.visible = false;
+      }       
+   }      
 }
+
 
 class MeltingClock {
-  boolean visible;
-  String estado; // "jointLeft", "centroMasa"
-  int x;
-  int y;
-  PImage imagen;
-  boolean habilitadoPorControlUI; //Variable que hace que el reloj siga a la posicion del joint
+  boolean visible;  // indica si se muestra o no se muestra el reloj
+  String estado;  // intial, en mano izquierda, en centro de masa, pre_final, final
+  float x; // posicion x del reloj
+  float y; // posicion y del reloj
+  PImage imagen; // imagen a mostrar
+  boolean habilitadoPorControlUI; //Variable que hace que el reloj siga a la mano izquierda, a controlar por UI
+   
    MeltingClock() {
-     //Constructor
     this.visible = false;
     this.habilitadoPorControlUI = true;
-    this.x = 100;
-    this.x = 100;
-    this.estado = "jointLeft";
+    this.x = RELOJ_INITIAL_X;
+    this.y = RELOJ_INITIAL_Y;
+    this.estado = INITIAL;
   } 
   
   void mostrar() {
@@ -184,60 +222,23 @@ class MeltingClock {
   }
   
   void latir() {
-      //Late una vez por segund0
+      //Late una vez por segundo
       float x = millis()/250.0;
       float c01 = cos(2*x);
       float c02 = cos(1+5*x);
-      float c03 = 1+((c01+c02)/6);
-      
-      float heartPulse = pow(c03,5.0);
-      
+      float c03 = 1+((c01+c02)/6);      
+      float heartPulse = pow(c03,5.0);      
       float heartH = map(heartPulse, 0, 3,  320,345);
       
       image(this.imagen, this.x, this.y, 279, heartH);
   }
 };
 
-class Particle {
-  float x, y; // position of the particle
-  float vx, vy; // velocity of the particle
-  int lifeTime; // the age of the particle
-  int maxLifeTime; // the age when the particle should be retired
-
-
-  /**
-   This is the constructor. We are just setting the lifetime here.
-   **/
-  Particle() {
-    lifeTime = 0;
-    maxLifeTime = 250;
-   
-  }
-
-  /**
-   Move the particle based on the velocity and increment the age of the particle.
-   **/
-  void update() {
-    x += vx;
-    y += vy; 
-
-    lifeTime += 1;
-  }
-
-  /**
-   Paint the particle. Note that the lifetime is used to determine the alpha 
-   for the fill so that this gradually fades away rather than just popping out of
-   existence.
-   
- This time we are loading in a blurred circle for the particle to create the smoke effect.
-   **/
-  void paint() {
-  
-    float alpha = (1 - (float)lifeTime / maxLifeTime)* 150;
-    //imageMode(CENTER);
-    //tint(255,alpha);
-    image(texture,x,y);
-  }
+//Evento fired cuando hay un new user
+void onNewUser(SimpleOpenNI curContext, int userId){
+  println("onNewUser - userId: " + userId);
+  curContext.startTrackingSkeleton(userId);
 }
+
   
 
