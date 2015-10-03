@@ -12,12 +12,12 @@ public class ControlFrame extends PApplet {
     cp5.addBang("bang1")
         .setPosition(180, 10)
         .setSize(40, 20)
-        .setLabel("Grabar")
+        .setLabel("Iniciar escena")
         ;
     cp5.addBang("bang2")
         .setPosition(270, 10)
         .setSize(40, 20)
-        .setLabel("Detener")
+        .setLabel("Finalizar escena")
         ;
 
     }
@@ -27,20 +27,20 @@ public class ControlFrame extends PApplet {
 
         // Grabar
         if (n == "bang1") {
-            do_record = true;
+            grab_clock = true;
         }
         // Detener grabación
         if (n == "bang2") {
-            do_record = false;
+            clock.habilitadoPorControlUI = !clock.habilitadoPorControlUI;
         }
     }
 
     public void draw() {
         background(0);
         fill(255);
-        text("Grabación de movimiento",10,20);
+        text("Controles de escena",10,20);
         stroke(255,0,0);
-        line(5,50,445,50);
+        //line(5,50,445,50);
     }
 
     private ControlFrame() {}
