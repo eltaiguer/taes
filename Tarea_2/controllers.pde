@@ -10,15 +10,22 @@ public class ControlFrame extends PApplet {
 
     cp5 = new ControlP5(this);
     cp5.addBang("bang1")
-        .setPosition(180, 10)
+        .setPosition(10, 120)
         .setSize(40, 20)
-        .setLabel("Iniciar escena")
-        ;
+        .setLabel("Iniciar escena");
+
     cp5.addBang("bang2")
-        .setPosition(270, 10)
+        .setPosition(100, 120)
         .setSize(40, 20)
-        .setLabel("Finalizar escena")
-        ;
+        .setLabel("Finalizar escena");
+
+    cp5.addSlider("bang3")
+      .plugTo(parent,"calib_dist")
+      .setRange(1, 1000)
+      .setPosition(10, 40)
+      .setSize(300, 10)
+      .setValue(300)
+      .setLabel("");
 
     }
 
@@ -38,9 +45,10 @@ public class ControlFrame extends PApplet {
     public void draw() {
         background(0);
         fill(255);
-        text("Controles de escena",10,20);
+        text("Calibración Kinect",10,20);
         stroke(255,0,0);
-        //line(5,50,445,50);
+        line(5,70,445,70);
+        text("Controles de escena",10,100);
     }
 
     private ControlFrame() {}

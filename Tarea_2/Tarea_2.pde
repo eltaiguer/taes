@@ -55,7 +55,7 @@ void setup() {
     size(kWidth, kHeight);
     frameRate(30);
 
-    cf = addControlFrame("Controladores", 350, 75);
+    cf = addControlFrame("Controladores", 320, 190);
 
     //*******dali
     bg = loadImage("stage1.png");
