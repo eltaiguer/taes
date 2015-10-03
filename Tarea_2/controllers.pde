@@ -21,10 +21,10 @@ public class ControlFrame extends PApplet {
 
     cp5.addSlider("bang3")
       .plugTo(parent,"calib_dist")
-      .setRange(1, 1000)
+      .setRange(1, 5000)
       .setPosition(10, 40)
       .setSize(300, 10)
-      .setValue(300)
+      .setValue(2000)
       .setLabel("");
 
     }

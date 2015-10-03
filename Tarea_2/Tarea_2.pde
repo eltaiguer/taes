@@ -18,7 +18,7 @@ PImage image;
 boolean recording = false;
 boolean do_record = false;
 //calibracion distancia
-int calib_dist = 3000;
+int calib_dist;
 
 //variables escena
 PImage bg;
