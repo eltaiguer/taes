@@ -197,6 +197,7 @@ void drawShadow(int[] dmap, int size){
   image(image,0,0);
 }
 
+// sacar esto
 void drawTimeline() {
     pushStyle();
 
@@ -260,19 +261,19 @@ void robarRelojDeEscena() {
     if (clock.estado == INITIAL) { //Tengo que agarrar el reloj
         float jointLeftX   = leftHand2d.x;
         float jointLeftY   = leftHand2d.y;
-        posicionRobarClock = jointLeftX > 0 && Math.abs(clock.x - jointLeftX) <= 20 && Math.abs(clock.y - jointLeftY) <=  20;
+        posicionRobarClock = jointLeftX > 0 && Math.abs(clock.x - jointLeftX) <= 100 && Math.abs(clock.y - jointLeftY) <=  100;
 
         if (clock.habilitadoPorControlUI && posicionRobarClock) { //Si la mano izquierda esta en la posicion del reloj, lo agarro
             clock.estado  = EN_MANO_IZQUIERDA;
             clock.visible = true;
             do_record     = true; //Comienzo a grabar
         }
-    } else if (clock.estado == EN_MANO_IZQUIERDA){ //Debo llevar el reloj hacia el centro de masa
+    } /*else if (clock.estado == EN_MANO_IZQUIERDA){ //Debo llevar el reloj hacia el centro de masa
         float centroMasaX  = 500;//com2d.x;   // CAMBIAR!!!!
         float centroMasaY  = 300;//com2d.y;   // CAMBIAR!!!!
         posicionRobarClock = Math.abs(clock.x - centroMasaX) <= 20  && Math.abs(centroMasaY - clock.y) <= 20;
         if (clock.habilitadoPorControlUI && posicionRobarClock) { //Dejo el reloj en el centro de masa
-            clock.estado = EN_CENTRO_DE_MASA;
+            //clock.estado = EN_CENTRO_DE_MASA;
             clock.habilitadoPorControlUI = false;
         }
     } else if (clock.estado == EN_CENTRO_DE_MASA){  //Debo llevar el reloj del centro de masa al cuadro
@@ -282,9 +283,10 @@ void robarRelojDeEscena() {
         if (clock.habilitadoPorControlUI && posicionRobarClock) { //MARCO INICIO DEL MOVIMIENTO
             clock.estado = FINAL;
         }
-    } else if (clock.estado == FINAL){ // SI ESTOY LLEVANDO  EL RELOJ Y ALCANCE LA POSICION ORIGINAL, LO DEJO EN EL CUADRO
-        posicionRobarClock = Math.abs(clock.x - RELOJ_INITIAL_X) <= 20 && Math.abs(clock.y - RELOJ_INITIAL_X) <=  20;
-        if (clock.habilitadoPorControlUI && posicionRobarClock) { //Si lleve el reloj al centro de masa, proyecto el reloj en el centro de masa
+    }*/ else if (clock.estado == EN_MANO_IZQUIERDA/*FINAL*/){ // SI ESTOY LLEVANDO  EL RELOJ Y ALCANCE LA POSICION ORIGINAL, LO DEJO EN EL CUADRO
+        posicionRobarClock = Math.abs(clock.x - RELOJ_INITIAL_X) <= 100 && Math.abs(clock.y - RELOJ_INITIAL_X) <=  100;
+        println("posicion robar clock: " + posicionRobarClock);
+        if (!clock.habilitadoPorControlUI && posicionRobarClock) { //Si lleve el reloj al centro de masa, proyecto el reloj en el centro de masa
             clock.estado  = OVER;
             clock.visible = false;
             grab_clock    = false;

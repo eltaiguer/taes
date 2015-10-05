@@ -24,7 +24,7 @@ public class ControlFrame extends PApplet {
       .setRange(1, 5000)
       .setPosition(10, 40)
       .setSize(300, 10)
-      .setValue(2000)
+      .setValue(3000)
       .setLabel("");
 
     }
