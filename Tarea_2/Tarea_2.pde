@@ -131,65 +131,12 @@ void draw() {
 
         context.update();
 
-        background(0, 0, 0);
-
-        if ((context.nodes() & SimpleOpenNI.NODE_DEPTH) != 0) {
-            image(context.depthImage(), 0, 0);
+        if ((context.nodes() & SimpleOpenNI.NODE_DEPTH) != 0) {      
+          drawShadow(context.depthMap(), context.depthMapSize());
         }
-
-        // draw timeline
-       // if(recordFlag == false){
-          int[] dmap = context.depthMap();
-          int size = context.depthMapSize();
-          int count = 0;
-
-          realImage = createImage(context.depthWidth(), context.depthHeight(), RGB);
-            for(int i = 0; i < context.depthWidth(); i++){
-              for(int j = 0; j < context.depthHeight(); j++){
-
-                int index = i + j * context.depthWidth();
-                int d = dmap[index];
-
-                if (d < calib_dist){
-
-                  if (index + 1 < size && dmap[index + 1] < calib_dist){
-                    count++;
-                  }
-
-                  if (index - 1 >= 0 && dmap[index -1] < calib_dist){
-                    count++;
-                  }
-
-                  if ((index + context.depthWidth() < size) && (dmap[index + context.depthWidth()] < calib_dist)){
-                     count++;
-                  }
-
-                  if ((index - context.depthWidth() >= 0) && (dmap[index - context.depthWidth()] < calib_dist)){
-                    count++;
-                  }
-
-                  if (count < 4){
-                    realImage.pixels[index] = color(255, 0, 0);
-                  }else{
-                    realImage.pixels[index] = color(0, 100, 0);
-                  }
-
-                }else{
-                  realImage.pixels[index] = color(0, 0, 0);
-                }
-                count = 0;
-              }
-          }
-
-          realImage.updatePixels();
-          image.loadPixels();
-          // escalamos las imagenes
-          image.copy(realImage, 0, 0, 640, 480, 0, 0, width, height);
-          image(image,0,0);
-          drawTimeline();
-          text("curFramePlayer: " + context.curFramePlayer(),10,10);
-         // }
-
+      
+        drawTimeline();
+        text("curFramePlayer: " + context.curFramePlayer(),10,10);
     }
 
     //paro grabacion
@@ -200,6 +147,54 @@ void draw() {
         context = new SimpleOpenNI(this,recordPath);
         context.enableDepth();
     }
+}
+
+void drawShadow(int[] dmap, int size){
+  int count = 0;
+  realImage = createImage(context.depthWidth(), context.depthHeight(), RGB);
+  
+  for(int i = 0; i < context.depthWidth(); i++){
+    for(int j = 0; j < context.depthHeight(); j++){
+    
+      int index = i + j * context.depthWidth();
+      int d = dmap[index];
+      
+      if (d < calib_dist){
+      
+        if (index + 1 < size && dmap[index + 1] < calib_dist){
+          count++;
+        }
+        
+        if (index - 1 >= 0 && dmap[index -1] < calib_dist){
+          count++;
+        }
+        
+        if ((index + context.depthWidth() < size) && (dmap[index + context.depthWidth()] < calib_dist)){
+         count++;
+        }
+        
+        if ((index - context.depthWidth() >= 0) && (dmap[index - context.depthWidth()] < calib_dist)){
+          count++;
+        }
+        
+        if (count < 4){
+          realImage.pixels[index] = color(0, 0, 0, 128);
+        }else{
+          realImage.pixels[index] = color(30, 30, 30, 200);
+        }
+      
+      }else{
+        realImage.pixels[index] = color(0, 0, 0, 0);
+      }
+      count = 0;
+    }
+  }
+  
+  realImage.updatePixels();
+  image.loadPixels();
+  // escalamos las imagenes
+  image.copy(realImage, 0, 0, 640, 480, 0, 0, width, height);
+  image(image,0,0);
 }
 
 void drawTimeline() {
@@ -270,7 +265,7 @@ void robarRelojDeEscena() {
         if (clock.habilitadoPorControlUI && posicionRobarClock) { //Si la mano izquierda esta en la posicion del reloj, lo agarro
             clock.estado  = EN_MANO_IZQUIERDA;
             clock.visible = true;
-            //do_record     = true; //Comienzo a grabar
+            do_record     = true; //Comienzo a grabar
         }
     } else if (clock.estado == EN_MANO_IZQUIERDA){ //Debo llevar el reloj hacia el centro de masa
         float centroMasaX  = 500;//com2d.x;   // CAMBIAR!!!!
@@ -293,7 +288,7 @@ void robarRelojDeEscena() {
             clock.estado  = OVER;
             clock.visible = false;
             grab_clock    = false;
-            //do_record     = false; //Detengo grabacion y comienzo reproduccion
+            do_record     = false; //Detengo grabacion y comienzo reproduccion
         }
     }
 }
