@@ -25,7 +25,9 @@ PImage bg;
 PImage bgSinClock;
 PImage mano;
 MeltingClock clock;
-boolean grab_clock = false;
+boolean grab_clock;
+boolean draw_shadow;
+boolean end_scene;
 
 // Joints
 PVector com        = new PVector();
@@ -55,7 +57,7 @@ void setup() {
     size(kWidth, kHeight);
     frameRate(30);
 
-    cf = addControlFrame("Controladores", 320, 190);
+    cf = addControlFrame("Controladores", 320, 250);
 
     //*******dali
     bg = loadImage("stage1.png");
@@ -94,7 +96,7 @@ void setup() {
 }
 
 void draw() {
-    if (clock.visible ){
+    if (clock.estado != EN_MANO_IZQUIERDA) {
         image(bgSinClock, 0, 0);
     } else {
         image(bg, 0, 0);
@@ -131,10 +133,11 @@ void draw() {
 
         context.update();
 
-        if ((context.nodes() & SimpleOpenNI.NODE_DEPTH) != 0) {      
-          drawShadow(context.depthMap(), context.depthMapSize());
+        if ((context.nodes() & SimpleOpenNI.NODE_DEPTH) != 0) {
+            if (draw_shadow)
+                drawShadow(context.depthMap(), context.depthMapSize());
         }
-      
+
         drawTimeline();
         text("curFramePlayer: " + context.curFramePlayer(),10,10);
     }
@@ -152,44 +155,44 @@ void draw() {
 void drawShadow(int[] dmap, int size){
   int count = 0;
   realImage = createImage(context.depthWidth(), context.depthHeight(), RGB);
-  
+
   for(int i = 0; i < context.depthWidth(); i++){
     for(int j = 0; j < context.depthHeight(); j++){
-    
+
       int index = i + j * context.depthWidth();
       int d = dmap[index];
-      
+
       if (d < calib_dist){
-      
+
         if (index + 1 < size && dmap[index + 1] < calib_dist){
           count++;
         }
-        
+
         if (index - 1 >= 0 && dmap[index -1] < calib_dist){
           count++;
         }
-        
+
         if ((index + context.depthWidth() < size) && (dmap[index + context.depthWidth()] < calib_dist)){
          count++;
         }
-        
+
         if ((index - context.depthWidth() >= 0) && (dmap[index - context.depthWidth()] < calib_dist)){
           count++;
         }
-        
+
         if (count < 4){
           realImage.pixels[index] = color(0, 0, 0, 128);
         }else{
           realImage.pixels[index] = color(30, 30, 30, 200);
         }
-      
+
       }else{
         realImage.pixels[index] = color(0, 0, 0, 0);
       }
       count = 0;
     }
   }
-  
+
   realImage.updatePixels();
   image.loadPixels();
   // escalamos las imagenes

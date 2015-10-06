@@ -18,38 +18,47 @@ public class ControlFrame extends PApplet {
           .setValue(3000)
           .setLabel("");
 
-        cp5.addToggle("startControl")
+        cp5.addToggle("grabControl")
             .plugTo(parent,"grab_clock")
             .setPosition(10, 120)
             .setSize(40, 20)
             .setValue(false)
-            .setLabel("Iniciar");
+            .setLabel("Tomar reloj");
 
-        cp5.addToggle("endControl")
-            .plugTo(parent,"clock.habilitadoPorControlUI")
-            .setPosition(80, 120)
+        cp5.addBang("releaseControl")
+            .setPosition(110, 120)
             .setSize(40, 20)
-            .setValue(true)
-            .setLabel("Finalizar");
+            .setLabel("Soltar Reloj");
 
-        cp5.addToggle("clockControl")
-            .plugTo(parent,"clock.visible")
-            .setPosition(150, 120)
+        cp5.addBang("clockControl")
+            .setPosition(210, 120)
             .setSize(40, 20)
-            .setValue(false)
-            .setLabel("Reloj");
+            .setLabel("Ver Reloj");
 
         cp5.addToggle("shadowControl")
             .plugTo(parent,"draw_shadow")
-            .setPosition(220, 120)
+            .setPosition(10, 180)
             .setSize(40, 20)
             .setValue(true)
-            .setLabel("Sombra");
+            .setLabel("Ver sombra");
+
+        cp5.addToggle("endControl")
+            .plugTo(parent,"end_scene")
+            .setPosition(110, 180)
+            .setSize(40, 20)
+            .setValue(true)
+            .setLabel("Finalizar escena");
     }
 
 
     void controlEvent(ControlEvent theEvent) {
         String n = theEvent.getName();
+
+        if (n == "clockControl") {
+            clock.visible = !clock.visible;
+        } else if (n == "releaseControl") {
+            clock.habilitadoPorControlUI = !clock.habilitadoPorControlUI;
+        }
     }
 
     public void draw() {
