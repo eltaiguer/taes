@@ -5,41 +5,51 @@ public class ControlFrame extends PApplet {
     Object parent;
 
     public void setup() {
-    size(w, h);
-    frameRate(25);
+        size(w, h);
+        frameRate(25);
 
-    cp5 = new ControlP5(this);
-    cp5.addBang("bang1")
-        .setPosition(10, 120)
-        .setSize(40, 20)
-        .setLabel("Iniciar escena");
+        cp5 = new ControlP5(this);
 
-    cp5.addBang("bang2")
-        .setPosition(100, 120)
-        .setSize(40, 20)
-        .setLabel("Finalizar escena");
+        cp5.addSlider("kinectCalibrationControl")
+          .plugTo(parent,"calib_dist")
+          .setRange(1, 5000)
+          .setPosition(10, 40)
+          .setSize(300, 10)
+          .setValue(2000)
+          .setLabel("");
 
-    cp5.addSlider("bang3")
-      .plugTo(parent,"calib_dist")
-      .setRange(1, 5000)
-      .setPosition(10, 40)
-      .setSize(300, 10)
-      .setValue(2000)
-      .setLabel("");
+        cp5.addToggle("startControl")
+            .plugTo(parent,"grab_clock")
+            .setPosition(10, 120)
+            .setSize(40, 20)
+            .setValue(false)
+            .setLabel("Iniciar");
 
+        cp5.addToggle("endControl")
+            .plugTo(parent,"clock.habilitadoPorControlUI")
+            .setPosition(80, 120)
+            .setSize(40, 20)
+            .setValue(true)
+            .setLabel("Finalizar");
+
+        cp5.addToggle("clockControl")
+            .plugTo(parent,"clock.visible")
+            .setPosition(150, 120)
+            .setSize(40, 20)
+            .setValue(false)
+            .setLabel("Reloj");
+
+        cp5.addToggle("shadowControl")
+            .plugTo(parent,"draw_shadow")
+            .setPosition(220, 120)
+            .setSize(40, 20)
+            .setValue(true)
+            .setLabel("Sombra");
     }
+
 
     void controlEvent(ControlEvent theEvent) {
         String n = theEvent.getName();
-
-        // Grabar
-        if (n == "bang1") {
-            grab_clock = true;
-        }
-        // Detener grabación
-        if (n == "bang2") {
-            clock.habilitadoPorControlUI = !clock.habilitadoPorControlUI;
-        }
     }
 
     public void draw() {
