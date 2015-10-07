@@ -18,46 +18,81 @@ public class ControlFrame extends PApplet {
           .setValue(3000)
           .setLabel("");
 
-        cp5.addToggle("grabControl")
-            .plugTo(parent,"grab_clock")
+        cp5.addBang("grabControl")
             .setPosition(10, 120)
             .setSize(40, 20)
-            .setValue(false)
-            .setLabel("Tomar reloj");
-
-        cp5.addBang("releaseControl")
-            .setPosition(110, 120)
-            .setSize(40, 20)
-            .setLabel("Soltar Reloj");
+            .setLabel("Tomar");
 
         cp5.addBang("clockControl")
+            .setPosition(110, 120)
+            .setSize(40, 20)
+            .setLabel("Visible");
+
+        cp5.addBang("releaseControl")
             .setPosition(210, 120)
             .setSize(40, 20)
-            .setLabel("Ver Reloj");
+            .setLabel("Soltar");
+
+        cp5.addToggle("recordControl")
+            .plugTo(parent,"do_record")
+            .setPosition(10, 220)
+            .setSize(40, 20)
+            .setValue(false)
+            .setLabel("Grabar");
+
+        cp5.addToggle("playControl")
+            .plugTo(parent,"do_play")
+            .setPosition(110, 220)
+            .setSize(40, 20)
+            .setValue(false)
+            .setLabel("Reproducir");
 
         cp5.addToggle("shadowControl")
             .plugTo(parent,"draw_shadow")
-            .setPosition(10, 180)
+            .setPosition(210, 220)
             .setSize(40, 20)
             .setValue(true)
             .setLabel("Ver sombra");
 
-        cp5.addToggle("endControl")
-            .plugTo(parent,"end_scene")
-            .setPosition(110, 180)
+        cp5.addBang("firstSceneControl")
+            .setPosition(10, 320)
             .setSize(40, 20)
-            .setValue(false)
-            .setLabel("Finalizar escena");
+            .setLabel("Escena 1");
+
+        cp5.addBang("secondSceneControl")
+            .setPosition(110, 320)
+            .setSize(40, 20)
+            .setLabel("Escena 2");
+
+        cp5.addBang("thirdSceneControl")
+            .setPosition(210, 320)
+            .setSize(40, 20)
+            .setLabel("Escena 3");
+
+        cp5.addBang("backgroundControl")
+            .setPosition(10, 420)
+            .setSize(40, 20)
+            .setLabel("Siguiente");
     }
 
 
     void controlEvent(ControlEvent theEvent) {
         String n = theEvent.getName();
 
-        if (n == "clockControl") {
+        if (n == "grabControl") {
+            grab_clock = !grab_clock;
+        } else if (n == "clockControl") {
             clock.visible = !clock.visible;
         } else if (n == "releaseControl") {
             clock.habilitadoPorControlUI = !clock.habilitadoPorControlUI;
+        } else if (n == "firstSceneControl") {
+            scene = "firstScene";
+        } else if (n == "secondSceneControl") {
+            scene = "secondScene";
+        } else if (n == "thirdSceneControl") {
+            scene = "thirdScene";
+        } else if (n == "backgroundControl") {
+            background_image++;
         }
     }
 
@@ -67,7 +102,13 @@ public class ControlFrame extends PApplet {
         text("Calibración Kinect",10,20);
         stroke(255,0,0);
         line(5,70,445,70);
-        text("Controles de escena",10,100);
+        text("Controles reloj",10,100);
+        line(5,170,445,170);
+        text("Toggles grabación",10,200);
+        line(5,270,445,270);
+        text("Controles escenas",10,300);
+        line(5,370,445,370);
+        text("Control imágenes",10,400);
     }
 
     private ControlFrame() {}

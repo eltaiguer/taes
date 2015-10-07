@@ -16,7 +16,8 @@ String recordPath = "test.oni";
 PImage realImage;
 PImage image;
 boolean recording = false;
-boolean do_record = false;
+boolean do_record;
+boolean do_play;
 //calibracion distancia
 int calib_dist;
 
@@ -25,7 +26,7 @@ PImage bg;
 PImage bgSinClock;
 PImage mano;
 MeltingClock clock;
-boolean grab_clock;
+boolean grab_clock = false;
 boolean draw_shadow;
 boolean end_scene;
 
@@ -46,6 +47,9 @@ String EN_CENTRO_DE_MASA = "EN_CENTRO_DE_MASA"; // El reloj esta en el centro de
 String FINAL             = "FINAL"; // Devolviendo el reloj
 String OVER              = "OVER"; // Devolvi el reloj
 
+String scene         = "firstScene";
+int background_image = 0;
+
 void setup() {
     //si ya existe un archivo lo elimino
     File file = new File(sketchPath("data/"+recordPath));
@@ -57,7 +61,7 @@ void setup() {
     size(kWidth, kHeight);
     frameRate(30);
 
-    cf = addControlFrame("Controladores", 320, 250);
+    cf = addControlFrame("Controladores", 320, 500);
 
     //*******dali
     bg = loadImage("stage1.png");
