@@ -96,7 +96,7 @@ void setup() {
 }
 
 void draw() {
-    if (clock.estado != EN_MANO_IZQUIERDA) {
+    if (clock.estado == EN_MANO_IZQUIERDA) {
         image(bgSinClock, 0, 0);
     } else {
         image(bg, 0, 0);
@@ -148,6 +148,18 @@ void draw() {
         recording = false; do_record = true;
 
         context = new SimpleOpenNI(this,recordPath);
+        context.enableDepth();
+    }
+
+    if (end_scene) {
+        end_scene = false;
+        //grabacion
+        context = new SimpleOpenNI(this);
+        if(context.isInit() == false){
+            println("Can't init SimpleOpenNI, maybe the camera is not connected!");
+            exit();
+            return;
+        }
         context.enableDepth();
     }
 }

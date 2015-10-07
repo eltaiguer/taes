@@ -46,7 +46,7 @@ public class ControlFrame extends PApplet {
             .plugTo(parent,"end_scene")
             .setPosition(110, 180)
             .setSize(40, 20)
-            .setValue(true)
+            .setValue(false)
             .setLabel("Finalizar escena");
     }
 
