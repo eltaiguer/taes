@@ -29,6 +29,11 @@ boolean grab_clock;
 boolean draw_shadow;
 boolean end_scene;
 
+
+//Imagenes 
+imagenesSilueta imagenes;
+//Imagenes 
+
 // Joints
 PVector com        = new PVector();
 PVector com2d      = new PVector();
@@ -47,6 +52,16 @@ String FINAL             = "FINAL"; // Devolviendo el reloj
 String OVER              = "OVER"; // Devolvi el reloj
 
 void setup() {
+    
+    //imagenes
+    imagenes = new imagenesSilueta();
+    imagenes.addImagen("1.jpg",0);
+    imagenes.addImagen("2.jpg",1);
+    imagenes.addImagen("3.jpg",2);
+    imagenes.addImagen("4.jpg",3);
+    
+    //imagenes
+  
     //si ya existe un archivo lo elimino
     File file = new File(sketchPath("data/"+recordPath));
     if (file.delete())
@@ -95,13 +110,17 @@ void setup() {
     //reproduccion
 }
 
+void mouseClicked(){
+  imagenes.showNextImage();
+}
+
 void draw() {
-    if (clock.estado == EN_MANO_IZQUIERDA) {
+  /*  if (clock.estado == EN_MANO_IZQUIERDA) {
         image(bgSinClock, 0, 0);
     } else {
         image(bg, 0, 0);
     }
-
+*/
     //durante escena
     if (grab_clock) {
         updateJointsPosition();
@@ -315,3 +334,5 @@ void onNewUser(SimpleOpenNI curContext, int userId) {
     println("onNewUser - userId: " + userId);
     curContext.startTrackingSkeleton(userId);
 }
+
+
