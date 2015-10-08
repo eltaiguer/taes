@@ -15,25 +15,16 @@ int kHeight = 768;
 String recordPath = "test.oni";
 PImage realImage;
 PImage image;
-boolean recording = false;
-boolean do_record;
-boolean do_play;
-//calibracion distancia
-int calib_dist;
 
 //variables escena
 PImage bg;
 PImage bgSinClock;
 PImage mano;
+PImage scene_2_img;
 MeltingClock clock;
-boolean grab_clock = false;
-boolean draw_shadow;
-boolean end_scene;
 
-
-//Imagenes 
+//Imagenes
 imagenesSilueta imagenes;
-//Imagenes 
 
 // Joints
 PVector com        = new PVector();
@@ -48,24 +39,21 @@ float RELOJ_INITIAL_Y = 274;
 //Estados Reloj
 String INITIAL           = "INITIAL"; // Reloj sin agarrar
 String EN_MANO_IZQUIERDA = "EN_MANO_IZQUIERDA"; // Agarre el reloj
-String EN_CENTRO_DE_MASA = "EN_CENTRO_DE_MASA"; // El reloj esta en el centro de masa proyectado
-String FINAL             = "FINAL"; // Devolviendo el reloj
 String OVER              = "OVER"; // Devolvi el reloj
 
-String scene         = "firstScene";
-int background_image = 0;
+//variables controles interfaz
+String scene       = "firstScene";
+boolean grab_clock = false;
+boolean draw_shadow;
+boolean invert_shadow;
+boolean end_scene;
+boolean do_record      = false;
+boolean do_play        = false;
+boolean record_context = false;
+boolean play_context   = false;
+int calib_dist;
 
 void setup() {
-    
-    //imagenes
-    imagenes = new imagenesSilueta();
-    imagenes.addImagen("1.jpg",0);
-    imagenes.addImagen("2.jpg",1);
-    imagenes.addImagen("3.jpg",2);
-    imagenes.addImagen("4.jpg",3);
-    
-    //imagenes
-  
     //si ya existe un archivo lo elimino
     File file = new File(sketchPath("data/"+recordPath));
     if (file.delete())
@@ -78,18 +66,25 @@ void setup() {
 
     cf = addControlFrame("Controladores", 320, 500);
 
-    //*******dali
+    //escena_1
     bg = loadImage("stage1.png");
     bg.resize(kWidth, kHeight);
 
     bgSinClock = loadImage("stage2.png");
     bgSinClock.resize(kWidth, kHeight);
 
-    mano = loadImage("mano.png");
-
+    mano         = loadImage("mano.png");
     clock        = new MeltingClock();
     clock.imagen = loadImage("meltingClock.png");
-    //*******dali
+
+    //escena_2
+    scene_2_img = loadImage("scene2.jpg");
+
+    //escena_3
+    imagenes = new imagenesSilueta();
+    for (int i = 0; i < imagenes.cant_imgs; i++) {
+        imagenes.addImagen((i + 1) + ".jpg", i);
+    }
 
     // para imagen escalada
     image = new PImage(width,height,ARGB);
@@ -107,25 +102,20 @@ void setup() {
     // enable skeleton generation for all joints
     context.enableUser();
 
-    // setup the recording
-    context.enableRecorder(recordPath);
-    // select the recording channels
-    context.addNodeToRecording(SimpleOpenNI.NODE_DEPTH,true);
-    //reproduccion
-}
-
-void mouseClicked(){
-  imagenes.showNextImage();
 }
 
 void draw() {
-  /*  if (clock.estado == EN_MANO_IZQUIERDA) {
-        image(bgSinClock, 0, 0);
-    } else {
-        image(bg, 0, 0);
+    if (scene == "firstScene") {
+        if (clock.estado == EN_MANO_IZQUIERDA) {
+            image(bgSinClock, 0, 0);
+        } else {
+            image(bg, 0, 0);
+        }
+    } else if (scene == "secondScene") {
+        image(scene_2_img, 0, 0);
     }
-*/
-    //durante escena
+
+    //interaccion con reloj
     if (grab_clock) {
         updateJointsPosition();
 
@@ -134,50 +124,40 @@ void draw() {
             robarRelojDeEscena();
         }
 
-        actualizarPosicionReloj(); //Muevo el reloj hasta encontrar la posicion inicial
+        actualizarPosicionReloj(); //Muevo el reloj
         clock.mostrar();
 
         //DEBUG
         image(mano, leftHand2d.x,leftHand2d.y, 50, 50);
         //DEBUG
-
-        println("estado: " + clock.estado);
         // println("clock.x: " + clock.x);
         // println("clock.y: " + clock.y);
-        println("habilitadoPorControlUI : " + clock.habilitadoPorControlUI);
     }
 
-    //grabo
-    if (do_record) {
-        if (!recording) {
-            println("Comienza grabación");
-            recording = true;
+    //grabacion / reproduccion / camara
+    if (do_play || do_record) {
+        if (record_context) {
+            record_context = false;
+            // setup the recording
+            context.enableRecorder(recordPath);
+            // select the recording channels
+            context.addNodeToRecording(SimpleOpenNI.NODE_DEPTH,true);
+
+        } else if (play_context) {
+            play_context = false;
+            context      = new SimpleOpenNI(this,recordPath);
+            context.enableDepth();
         }
 
         context.update();
-
         if ((context.nodes() & SimpleOpenNI.NODE_DEPTH) != 0) {
             if (draw_shadow)
                 drawShadow(context.depthMap(), context.depthMapSize());
         }
 
-        drawTimeline();
-        text("curFramePlayer: " + context.curFramePlayer(),10,10);
-    }
-
-    //paro grabacion
-    if (recording && !do_record) {
-        println("Grabación detenida");
-        recording = false; do_record = true;
-
-        context = new SimpleOpenNI(this,recordPath);
-        context.enableDepth();
-    }
-
-    if (end_scene) {
+    } else if (end_scene) {
         end_scene = false;
-        //grabacion
-        context = new SimpleOpenNI(this);
+        context   = new SimpleOpenNI(this);
         if(context.isInit() == false){
             println("Can't init SimpleOpenNI, maybe the camera is not connected!");
             exit();
@@ -235,27 +215,9 @@ void drawShadow(int[] dmap, int size){
   image(image,0,0);
 }
 
-// sacar esto
-void drawTimeline() {
-    pushStyle();
-
-    stroke(255,255,0);
-    line(10, height - 20, width -10 , height - 20);
-
-    stroke(0);
-    rectMode(CENTER);
-    fill(255,255,0);
-
-    int pos = (int)((width - 2 * 10) * (float)context.curFramePlayer() / (float)context.framesPlayer());
-    rect(pos, height - 20, 7, 17);
-
-    popStyle();
-}
-
 void updateJointsPosition() {
     context.update();
 
-    // draw the skeleton if it's available
     int[] userList = context.getUsers();
     for (int i = 0; i < userList.length; i++) {
         if (context.isTrackingSkeleton(userList[i])) {
@@ -271,24 +233,8 @@ void updateJointsPosition() {
 }
 
 void actualizarPosicionReloj() {
-    if (clock.estado == EN_MANO_IZQUIERDA){  //tengo el reloj en la mano izquierda, que siga la mano izquierda
-        float jointLeftX = leftHand2d.x;
-        float jointLeftY = leftHand2d.y;
-        clock.x          = jointLeftX;
-        clock.y          = jointLeftY;
-    } else if (clock.estado == EN_CENTRO_DE_MASA){  //Si tengo el reloj en el centro de masa lo proyecto en el centro de masa
-        /* float centroMasaX = width/2;// com2d.x;
-        float centroMasaY = height/2;//com2d.y;
-        clock.x = centroMasaX;
-        clock.y = centroMasaY;
-        */
-    } else { // debe seguir la mano izquierda
-        float jointLeftX = leftHand2d.x;
-        float jointLeftY = leftHand2d.y;
-        clock.x          = jointLeftX;
-        clock.y          = jointLeftY;
-    }
-
+    clock.x = leftHand2d.x;
+    clock.y = leftHand2d.y;
 }
 
 // Roba el reloj de la escena
@@ -301,34 +247,19 @@ void robarRelojDeEscena() {
         float jointLeftY   = leftHand2d.y;
         posicionRobarClock = jointLeftX > 0 && Math.abs(clock.x - jointLeftX) <= 100 && Math.abs(clock.y - jointLeftY) <=  100;
 
-        if (clock.habilitadoPorControlUI && posicionRobarClock) { //Si la mano izquierda esta en la posicion del reloj, lo agarro
+        if (posicionRobarClock) { //Si la mano izquierda esta en la posicion del reloj, lo agarro
             clock.estado  = EN_MANO_IZQUIERDA;
             clock.visible = true;
-            do_record     = true; //Comienzo a grabar
+            println("estado: " + clock.estado);
         }
-    } /*else if (clock.estado == EN_MANO_IZQUIERDA){ //Debo llevar el reloj hacia el centro de masa
-        float centroMasaX  = 500;//com2d.x;   // CAMBIAR!!!!
-        float centroMasaY  = 300;//com2d.y;   // CAMBIAR!!!!
-        posicionRobarClock = Math.abs(clock.x - centroMasaX) <= 20  && Math.abs(centroMasaY - clock.y) <= 20;
-        if (clock.habilitadoPorControlUI && posicionRobarClock) { //Dejo el reloj en el centro de masa
-            //clock.estado = EN_CENTRO_DE_MASA;
-            clock.habilitadoPorControlUI = false;
-        }
-    } else if (clock.estado == EN_CENTRO_DE_MASA){  //Debo llevar el reloj del centro de masa al cuadro
-        float jointLeftX   = leftHand2d.x;
-        float jointLeftY   = leftHand2d.y;
-        posicionRobarClock = jointLeftX > 0 && Math.abs(clock.x - jointLeftX) <= 20 && Math.abs(clock.y - jointLeftY) <=  20;
-        if (clock.habilitadoPorControlUI && posicionRobarClock) { //MARCO INICIO DEL MOVIMIENTO
-            clock.estado = FINAL;
-        }
-    }*/ else if (clock.estado == EN_MANO_IZQUIERDA/*FINAL*/){ // SI ESTOY LLEVANDO  EL RELOJ Y ALCANCE LA POSICION ORIGINAL, LO DEJO EN EL CUADRO
+    } else if (clock.estado == EN_MANO_IZQUIERDA){ // SI ESTOY LLEVANDO  EL RELOJ Y ALCANCE LA POSICION ORIGINAL, LO DEJO EN EL CUADRO
         posicionRobarClock = Math.abs(clock.x - RELOJ_INITIAL_X) <= 100 && Math.abs(clock.y - RELOJ_INITIAL_X) <=  100;
-        println("posicion robar clock: " + posicionRobarClock);
-        if (!clock.habilitadoPorControlUI && posicionRobarClock) { //Si lleve el reloj al centro de masa, proyecto el reloj en el centro de masa
+        //println("posicion robar clock: " + posicionRobarClock);
+        if (clock.allow_release && posicionRobarClock) {
             clock.estado  = OVER;
             clock.visible = false;
             grab_clock    = false;
-            do_record     = false; //Detengo grabacion y comienzo reproduccion
+            println("estado: " + clock.estado);
         }
     }
 }
@@ -338,5 +269,3 @@ void onNewUser(SimpleOpenNI curContext, int userId) {
     println("onNewUser - userId: " + userId);
     curContext.startTrackingSkeleton(userId);
 }
-
-

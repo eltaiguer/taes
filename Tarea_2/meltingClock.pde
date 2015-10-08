@@ -4,14 +4,14 @@ class MeltingClock {
     float x; // posicion x del reloj
     float y; // posicion y del reloj
     PImage imagen; // imagen a mostrar
-    boolean habilitadoPorControlUI; //Variable que hace que el reloj siga a la mano izquierda, a controlar por UI
+    boolean allow_release; //Variable que hace que el reloj siga a la mano izquierda, a controlar por UI
 
     MeltingClock() {
-        this.visible                = false;
-        this.habilitadoPorControlUI = true;
-        this.x                      = RELOJ_INITIAL_X;
-        this.y                      = RELOJ_INITIAL_Y;
-        this.estado                 = INITIAL;
+        this.visible       = false;
+        this.allow_release = false;
+        this.x             = RELOJ_INITIAL_X;
+        this.y             = RELOJ_INITIAL_Y;
+        this.estado        = INITIAL;
     }
 
     void mostrar() {
