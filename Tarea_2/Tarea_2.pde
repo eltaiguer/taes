@@ -45,7 +45,7 @@ String OVER              = "OVER"; // Devolvi el reloj
 String scene       = "firstScene";
 boolean grab_clock = false;
 boolean draw_shadow;
-boolean invert_shadow;
+boolean invert_shadow  = false;
 boolean end_scene;
 boolean do_record      = false;
 boolean do_play        = false;
@@ -195,14 +195,26 @@ void drawShadow(int[] dmap, int size){
           count++;
         }
 
-        if (count < 4){
-          realImage.pixels[index] = color(0, 0, 0, 128);
+        if (!invert_shadow){
+          if (count < 4){
+            realImage.pixels[index] = color(0, 0, 0, 128);
+          }else{
+            realImage.pixels[index] = color(30, 30, 30, 200);
+          }
         }else{
-          realImage.pixels[index] = color(30, 30, 30, 200);
+          if (count < 4){
+            realImage.pixels[index] = color(0, 0, 0, 0);
+          }else{
+            realImage.pixels[index] = color(0, 0, 0, 0);
+          }
         }
 
       }else{
-        realImage.pixels[index] = color(0, 0, 0, 0);
+        if (!invert_shadow){
+          realImage.pixels[index] = color(0, 0, 0, 0);
+        }else{
+          realImage.pixels[index] = color(0, 0, 0, 255);
+        }
       }
       count = 0;
     }
