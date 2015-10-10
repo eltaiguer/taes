@@ -101,6 +101,7 @@ public class ControlFrame extends PApplet {
         } else if (n == "thirdSceneControl") {
             scene = "thirdScene";
             imagenes.showCurrentImage();
+            imagenes.incrementImageIndex();
         } else if (n == "recordControl") {
             println("Comienza grabación");
             do_play        = false;

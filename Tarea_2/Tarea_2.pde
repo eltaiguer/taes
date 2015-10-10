@@ -152,7 +152,7 @@ void draw() {
 
         } else if (camera_context) {
             camera_context = false;
-            invert_shadow  = false;
+            invert_shadow  = true;
             context        = new SimpleOpenNI(this);
             if(context.isInit() == false){
                 println("Can't init SimpleOpenNI, maybe the camera is not connected!");
