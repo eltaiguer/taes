@@ -51,6 +51,7 @@ boolean do_record      = false;
 boolean do_play        = false;
 boolean record_context = false;
 boolean play_context   = false;
+boolean camera_context = false;
 int calib_dist;
 
 void setup() {
@@ -136,7 +137,7 @@ void draw() {
     }
 
     //grabacion / reproduccion / camara
-    if (do_play || do_record) {
+    if (do_play || do_record || end_scene) {
         if (record_context) {
             record_context = false;
             // setup the recording
@@ -148,6 +149,17 @@ void draw() {
             play_context = false;
             context      = new SimpleOpenNI(this,recordPath);
             context.enableDepth();
+
+        } else if (camera_context) {
+            camera_context = false;
+            invert_shadow  = false;
+            context        = new SimpleOpenNI(this);
+            if(context.isInit() == false){
+                println("Can't init SimpleOpenNI, maybe the camera is not connected!");
+                exit();
+                return;
+            }
+            context.enableDepth();
         }
 
         context.update();
@@ -156,15 +168,6 @@ void draw() {
                 drawShadow(context.depthMap(), context.depthMapSize());
         }
 
-    } else if (end_scene) {
-        end_scene = false;
-        context   = new SimpleOpenNI(this);
-        if(context.isInit() == false){
-            println("Can't init SimpleOpenNI, maybe the camera is not connected!");
-            exit();
-            return;
-        }
-        context.enableDepth();
     }
 }
 

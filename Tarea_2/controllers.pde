@@ -115,9 +115,10 @@ public class ControlFrame extends PApplet {
             play_context = true;
         } else if (n == "cameraControl") {
             println("Comienza cámara");
-            do_record = false;
-            do_play   = false;
-            end_scene = true;
+            do_record      = false;
+            do_play        = false;
+            end_scene      = true;
+            camera_context = true;
         }
     }
 
