@@ -18,6 +18,5 @@ class imagenesSilueta {
         //Dibujo la imagen del index
         PImage img = this.imagenes[this.index];
         image(img, 0, 0);
-        this.incrementImageIndex();
     }
 }
