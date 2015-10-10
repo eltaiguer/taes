@@ -113,9 +113,9 @@ void draw() {
             image(bg, 0, 0);
         }
     } else if (scene == "secondScene") {
-        image(scene_2_img, 0, 0);
-    } else if (scene == "thirdScene"){
         imagenes.showCurrentImage(); //muestra la imagen
+    } else if (scene == "thirdScene"){
+        image(scene_2_img, 0, 0);
     }
 
     // interaccion con reloj

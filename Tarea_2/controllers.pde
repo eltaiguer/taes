@@ -98,12 +98,12 @@ public class ControlFrame extends PApplet {
         } else if (n == "firstSceneControl") {
             scene = "firstScene";
         } else if (n == "secondSceneControl") {
-            invert_shadow = false;
-            scene         = "secondScene";
-        } else if (n == "thirdSceneControl") {
             invert_shadow = true;
-            scene         = "thirdScene";
+            scene         = "secondScene";
             imagenes.incrementImageIndex();
+        } else if (n == "thirdSceneControl") {
+            invert_shadow = false;
+            scene         = "thirdScene";
         } else if (n == "recordControl") {
             println("Comienza grabación");
             do_play        = false;
