@@ -146,23 +146,21 @@ void draw() {
             context.addNodeToRecording(SimpleOpenNI.NODE_DEPTH,true);
 
         } else if (play_context) {
-            play_context = false;
-            context      = new SimpleOpenNI(this,recordPath);
+            play_context  = false;
+            invert_shadow = false;
+            context       = new SimpleOpenNI(this,recordPath);
             context.enableDepth();
 
         } else if (camera_context) {
             camera_context = false;
             invert_shadow  = true;
             context        = new SimpleOpenNI(this);
-            println("1");
             if(context.isInit() == false){
                 println("Can't init SimpleOpenNI, maybe the camera is not connected!");
                 exit();
                 return;
             }
-            println("2");
             context.enableDepth();
-            println("3");
         }
 
         context.update();

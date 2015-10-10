@@ -94,6 +94,7 @@ public class ControlFrame extends PApplet {
         } else if (n == "releaseControl") {
             println("allow_release : " + clock.allow_release);
             clock.allow_release = !clock.allow_release;
+            context.enableUser();
         } else if (n == "firstSceneControl") {
             scene = "firstScene";
         } else if (n == "secondSceneControl") {
