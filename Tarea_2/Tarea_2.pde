@@ -130,7 +130,7 @@ void draw() {
         clock.mostrar();
 
         //DEBUG
-        image(mano, leftHand2d.x,leftHand2d.y, 50, 50);
+        //image(mano, leftHand2d.x,leftHand2d.y, 50, 50);
         //DEBUG
         // println("clock.x: " + clock.x);
         // println("clock.y: " + clock.y);
@@ -147,11 +147,10 @@ void draw() {
 
         } else if (play_context) {
             play_context  = false;
-            invert_shadow = false;
             context       = new SimpleOpenNI(this,recordPath);
             context.enableDepth();
 
-        } else if (camera_context) {
+        } /*else if (camera_context) {
             camera_context = false;
             invert_shadow  = true;
             context        = new SimpleOpenNI(this);
@@ -161,7 +160,7 @@ void draw() {
                 return;
             }
             context.enableDepth();
-        }
+        }*/
 
         context.update();
         if ((context.nodes() & SimpleOpenNI.NODE_DEPTH) != 0) {

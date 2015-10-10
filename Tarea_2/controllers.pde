@@ -30,10 +30,10 @@ public class ControlFrame extends PApplet {
             .setSize(40, 20)
             .setLabel("Visible");
 
-        cp5.addBang("releaseControl")
+    /*    cp5.addBang("releaseControl")
             .setPosition(210, 120)
             .setSize(40, 20)
-            .setLabel("Soltar");
+            .setLabel("Soltar");*/
 
         //controles escenas
         cp5.addBang("firstSceneControl")
@@ -62,10 +62,10 @@ public class ControlFrame extends PApplet {
             .setSize(40, 20)
             .setLabel("Reproducir");
 
-        cp5.addBang("cameraControl")
+    /*    cp5.addBang("cameraControl")
             .setPosition(210, 320)
             .setSize(40, 20)
-            .setLabel("Camara");
+            .setLabel("Camara");*/
 
         //toggles sombra
         cp5.addToggle("viewShadowControl")
@@ -98,9 +98,11 @@ public class ControlFrame extends PApplet {
         } else if (n == "firstSceneControl") {
             scene = "firstScene";
         } else if (n == "secondSceneControl") {
-            scene = "secondScene";
+            invert_shadow = false;
+            scene         = "secondScene";
         } else if (n == "thirdSceneControl") {
-            scene = "thirdScene";
+            invert_shadow = true;
+            scene         = "thirdScene";
             imagenes.incrementImageIndex();
         } else if (n == "recordControl") {
             println("Comienza grabación");
