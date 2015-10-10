@@ -14,7 +14,7 @@ class imagenesSilueta {
         //Incremento y actualizo el index
         this.index = (this.index + 1) % cant_imgs;
     }
-    void showNextImage() {
+    void showCurrentImage() {
         //Dibujo la imagen del index
         PImage img = this.imagenes[this.index];
         image(img, 0, 0);

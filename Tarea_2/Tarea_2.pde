@@ -113,12 +113,13 @@ void draw() {
         }
     } else if (scene == "secondScene") {
         image(scene_2_img, 0, 0);
+    } else if (scene == "thirdScene"){
+        imagenes.showCurrentImage(); //muestra la imagen
     }
 
-    //interaccion con reloj
+    // interaccion con reloj
     if (grab_clock) {
         updateJointsPosition();
-
         boolean aunNoDevolviElReloj = clock.estado != OVER;
         if (aunNoDevolviElReloj){
             robarRelojDeEscena();
