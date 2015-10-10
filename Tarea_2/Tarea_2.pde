@@ -80,6 +80,7 @@ void setup() {
 
     //escena_2
     scene_2_img = loadImage("scene2.jpg");
+    scene_2_img.resize(kWidth, kHeight);
 
     //escena_3
     imagenes = new imagenesSilueta();
