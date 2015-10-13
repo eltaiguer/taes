@@ -87,6 +87,8 @@ void setup() {
     for (int i = 0; i < imagenes.cant_imgs; i++) {
         imagenes.addImagen((i + 1) + ".jpg", i);
     }
+    
+    
 
     // para imagen escalada
     image = new PImage(width,height,ARGB);
