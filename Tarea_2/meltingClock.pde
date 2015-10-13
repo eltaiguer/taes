@@ -29,6 +29,6 @@ class MeltingClock {
         float heartPulse = pow(c03,5.0);
         float heartH     = map(heartPulse, 0, 3,  320,345);
 
-        image(this.imagen, this.x, this.y, 139/2, heartH/4);
+        image(this.imagen, this.x, this.y, 139, heartH/2);
     }
 };
