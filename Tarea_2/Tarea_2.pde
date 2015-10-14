@@ -151,7 +151,7 @@ void draw() {
          imagenes.showCurrentImage(); //muestra la imagen
        }
     } else if (scene == "thirdScene"){
-       if (transparency_to_3rd < 255){
+       if (transparency_to_3rd < 50){
          transparency_to_3rd++;
          tint(255,255,255,transparency_to_3rd);
        }
