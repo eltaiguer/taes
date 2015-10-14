@@ -50,7 +50,7 @@ public class ControlFrame extends PApplet {
             .setPosition(210, 220)
             .setSize(40, 20)
             .setLabel("Escenas 3");
-            
+
         cp5.addBang("finalSceneControl")
             .setPosition(310, 220)
             .setSize(40, 20)
@@ -106,9 +106,23 @@ public class ControlFrame extends PApplet {
             invert_shadow = true;
             scene         = "secondScene";
             imagenes.incrementImageIndex();
+
+            println("Comienza grabación");
+            do_play        = false;
+            end_scene      = false;
+            do_record      = true;
+            record_context = true;
+
         } else if (n == "thirdSceneControl") {
             invert_shadow = false;
             scene         = "thirdScene";
+
+            println("Comienza reproducción");
+            do_record    = false;
+            end_scene    = false;
+            do_play      = true;
+            play_context = true;
+
         } else if (n == "recordControl") {
             println("Comienza grabación");
             do_play        = false;
