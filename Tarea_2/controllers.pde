@@ -94,8 +94,10 @@ public class ControlFrame extends PApplet {
 
         if (n == "grabControl") {
             grab_clock = !grab_clock;
+            println("grab_clock : " + grab_clock);
         } else if (n == "clockControl") {
             clock.visible = !clock.visible;
+            println("clock.visible : " + clock.visible);
         } else if (n == "releaseControl") {
             println("allow_release : " + clock.allow_release);
             clock.allow_release = !clock.allow_release;
@@ -142,7 +144,7 @@ public class ControlFrame extends PApplet {
             end_scene      = true;
             camera_context = true;
         } else if (n == "finalSceneControl"){
-          scene = "finalScene";
+            scene = "finalScene";
         }
     }
 
