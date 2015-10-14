@@ -23,6 +23,8 @@ PImage mano;
 PImage scene_2_img;
 MeltingClock clock;
 
+PImage black;
+
 //Imagenes
 imagenesSilueta imagenes;
 
@@ -52,7 +54,17 @@ boolean do_play        = false;
 boolean record_context = false;
 boolean play_context   = false;
 boolean camera_context = false;
+
+boolean fadeOut = true;
+
+
+
 int calib_dist;
+
+int transparency_to_2nd = 0;
+int transparency_to_3rd = 0;
+int transparency_to_final = 0;
+int step = 0;
 
 void setup() {
     //si ya existe un archivo lo elimino
@@ -65,13 +77,13 @@ void setup() {
     size(kWidth, kHeight);
     frameRate(30);
 
-    cf = addControlFrame("Controladores", 320, 500);
+    cf = addControlFrame("Controladores", 360, 500);
 
     //escena_1
-    bg = loadImage("stage1.png");
+    bg = loadImage("stage1.jpg");
     bg.resize(kWidth, kHeight);
 
-    bgSinClock = loadImage("stage2.png");
+    bgSinClock = loadImage("stage2.jpg");
     bgSinClock.resize(kWidth, kHeight);
 
     mano         = loadImage("mano.png");
@@ -91,7 +103,10 @@ void setup() {
     
 
     // para imagen escalada
-    image = new PImage(width,height,ARGB);
+    image = new PImage(kWidth, kHeight,ARGB);
+
+
+    black = loadImage("black.png");
 
     //grabacion
     context = new SimpleOpenNI(this);
@@ -110,17 +125,54 @@ void setup() {
 
 void draw() {
     if (scene == "firstScene") {
-        if (clock.estado == EN_MANO_IZQUIERDA) {
-            image(bgSinClock, 0, 0);
-        } else {
-            image(bg, 0, 0);
-        }
+      
+        
+      if (clock.estado == EN_MANO_IZQUIERDA) {
+        image(bgSinClock, 0, 0);
+                
+      } else {
+          image(bg, 0, 0);          
+      }    
+        
     } else if (scene == "secondScene") {
-        imagenes.showCurrentImage(); //muestra la imagen
+        if (fadeOut && transparency_to_2nd < 50){
+         transparency_to_2nd++;
+         tint(255,255,255,transparency_to_2nd);
+         image(black, 0, 0);        
+         
+       }else{
+         fadeOut = false;
+        
+         if (transparency_to_2nd > 0){
+           transparency_to_2nd--;
+           tint(255,255,255,50 - transparency_to_2nd);
+         }
+         
+         imagenes.showCurrentImage(); //muestra la imagen
+       }
     } else if (scene == "thirdScene"){
-        image(scene_2_img, 0, 0);
+       if (transparency_to_3rd < 255){
+         transparency_to_3rd++;
+         tint(255,255,255,transparency_to_3rd);
+       }
+       
+       image(scene_2_img, 0, 0);
+    } else if (scene == "finalScene"){
+      if (fadeOut && transparency_to_final < 50){
+        
+        step++;
+        
+        if (step > 5){
+          transparency_to_final++;
+          step = 0;
+        }
+         tint(255,255,255,transparency_to_final);
+         image(black, 0, 0);
+       }
+       
     }
-
+    
+      tint(255,255,255,255);
     // interaccion con reloj
     if (grab_clock) {
         updateJointsPosition();
@@ -230,7 +282,7 @@ void drawShadow(int[] dmap, int size){
   realImage.updatePixels();
   image.loadPixels();
   // escalamos las imagenes
-  image.copy(realImage, 0, 0, 640, 480, 0, 0, width, height);
+  image.copy(realImage, 0, 0, 640, 480, 0, 0, kWidth, kHeight);
   image(image,0,0);
 }
 

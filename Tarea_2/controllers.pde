@@ -50,6 +50,11 @@ public class ControlFrame extends PApplet {
             .setPosition(210, 220)
             .setSize(40, 20)
             .setLabel("Escenas 3");
+            
+        cp5.addBang("finalSceneControl")
+            .setPosition(310, 220)
+            .setSize(40, 20)
+            .setLabel("Final");
 
         //controles grabacion
         cp5.addBang("recordControl")
@@ -122,6 +127,8 @@ public class ControlFrame extends PApplet {
             do_play        = false;
             end_scene      = true;
             camera_context = true;
+        } else if (n == "finalSceneControl"){
+          scene = "finalScene";
         }
     }
 
