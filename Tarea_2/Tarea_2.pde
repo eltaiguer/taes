@@ -135,18 +135,21 @@ void draw() {
       }    
         
     } else if (scene == "secondScene") {
+        
         if (fadeOut && transparency_to_2nd < 50){
          transparency_to_2nd++;
          tint(255,255,255,transparency_to_2nd);
          image(black, 0, 0);        
-         
+           
        }else{
          fadeOut = false;
-        
-         if (transparency_to_2nd > 0){
+          do_record = true;
+          draw_shadow = true;
+         /*if (transparency_to_2nd > 0){
            transparency_to_2nd--;
            tint(255,255,255,50 - transparency_to_2nd);
-         }
+         }*/
+         tint(255,255,255,255);
          
          imagenes.showCurrentImage(); //muestra la imagen
        }
@@ -282,7 +285,7 @@ void drawShadow(int[] dmap, int size){
   realImage.updatePixels();
   image.loadPixels();
   // escalamos las imagenes
-  image.copy(realImage, 0, 0, 640, 480, 0, 0, kWidth, kHeight);
+  image.copy(realImage, 0, 0, 640, 480, -12, 0, kWidth+12, kHeight);
   image(image,0,0);
 }
 

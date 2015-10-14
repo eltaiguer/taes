@@ -114,6 +114,7 @@ public class ControlFrame extends PApplet {
             end_scene      = false;
             do_record      = true;
             record_context = true;
+            draw_shadow = false;
 
         } else if (n == "thirdSceneControl") {
             invert_shadow = false;
@@ -129,7 +130,7 @@ public class ControlFrame extends PApplet {
             println("Comienza grabación");
             do_play        = false;
             end_scene      = false;
-            do_record      = true;
+            do_record      = false;
             record_context = true;
         } else if (n == "playControl") {
             println("Comienza reproducción");
@@ -144,7 +145,8 @@ public class ControlFrame extends PApplet {
             end_scene      = true;
             camera_context = true;
         } else if (n == "finalSceneControl"){
-            scene = "finalScene";
+            fadeOut = true;
+            scene = "finalScene";            
         }
     }
 
