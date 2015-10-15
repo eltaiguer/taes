@@ -22,3 +22,11 @@ Para su desarrollo se utilizaron las siguientes herramientas:
 * [SimpleOpenNI](https://code.google.com/p/simple-openni/)
 * [ControlP5](http://www.sojamo.de/libraries/controlP5/)
 * [Fisica](http://www.ricardmarxer.com/fisica/)
+
+#### Tarea 2 - Tiempo + Cuerpo como proyector ####
+[Descripción Pendiente ...]
+
+Para su desarrollo se utilizaron las siguientes herramientas:
+* [Processing](https://processing.org/)
+* [SimpleOpenNI](https://code.google.com/p/simple-openni/)
+* [ControlP5](http://www.sojamo.de/libraries/controlP5/)
