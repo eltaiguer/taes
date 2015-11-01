@@ -5,102 +5,111 @@ ColorDisplay c2,c3;
 void setup() {
   size(1024,768);
   frameRate(30);
-  smooth();
-  colorMode(HSB, 360, 100, 100);
+ // smooth();
+  //colorMode(HSB, 360, 100, 100);
+  colorMode(RGB,255,255,255);
   blendMode(ADD);
-  colores = new ColorDisplay();
+ 
   whiteBackground = loadImage("white.png");
-  colores.h = 0; 
-  colores.s = 100; 
-  colores.v = 100;
   
-  //colores.display();
-  
-  c2 = new ColorDisplay();
-  c2.h = 240;
-  c2.s = 100;
-  c2.v = 100;
-  /*c2.display();*/
-  
-  c3 = new ColorDisplay();
-  c3.h = 120;
-  c3.s = 100;
-  c3.v = 100;
-  
+  colores = new ColorDisplay("rojo", 255, 0, 0 ,128);
+  c2 = new ColorDisplay("azul",0,0,255,128);
+  c3 = new ColorDisplay("verde",0,255,0,128);
+ 
   
 };
 
 void draw() {
-  background(255,255,255);
-  
+  //noTint();
+  //image(whiteBackground, 0, 0);
+ // background(255);
   colores.display();
-  c2.display();
-  
-  //c3.display();
+  c2.display();  
+ // c3.display();
+ 
 }
 
 
 void mousePressed() {  
    //Selecciona un color
-   colores.buildColor();
+   //colores.buildColor();
   //pinta la pantalla 
-   colores.display();
+  // colores.display();
   
 }
 
 void keyPressed(){
-    
-     if (keyCode == UP) {
-       //Aumenta la intensidad del color
-       colores.s = (colores.s + 10) % 100;
-     } else if (keyCode == DOWN) {
-       //Disminuye la intensidad del color
-       colores.s = (colores.s - 10) % 100;
-     } else if (keyCode == LEFT) {
+    if (keyCode == LEFT) {
        colores.noDibujar();
+     //  c2.noDibujar();
+      // c3.noDibujar();
      } else if (keyCode == RIGHT) {
        colores.siDibujar();
+       //c2.siDibujar();
+       //c3.siDibujar();
      }
-     colores.display();
+     
      
 }
 
 class ColorDisplay {
    
-   float h;
-   float s;
-   float v;
-   
+   float r;
+   float g;
+   float b;
+   float alpha;
    boolean dibujar;
-   
-   ColorDisplay() {
-     this.h = 0;
-     this.s = 100;
-     this.v = 100;
-     
+   String nombre;
+   boolean aumentarAlpha;
+   boolean disminuirAlpha;
+   ColorDisplay(String nombre,float r,float g,float b, float alpha) {
+     this.r = r;
+     this.g = g;
+     this.b = b;
+     this.alpha = alpha;
+     this.nombre = nombre;    
      this.dibujar = true;
+     this.aumentarAlpha = false;
+     this.disminuirAlpha = false;
    } 
    
    void noDibujar() {
      this.dibujar = false;
+     this.aumentarAlpha = false;
+     this.disminuirAlpha = true;
    }
    
    void siDibujar() {
      this.dibujar = true;
-   }
-   void display(){
-      if (this.dibujar){  
-       tint(this.h,this.s,this.v,128);
-       image(whiteBackground, 0, 0);
-       println("color (h:s:v:) = ("+ this.h+":" + this.s+":"+this.v+")");
-      }
+     aumentarAlpha = true;
+     disminuirAlpha = false;
    }
    
-   void buildColor() {
+   void display(){
+       if (this.aumentarAlpha){
+         this.alpha = (this.alpha + 1) % 128;
+       } else if (this.disminuirAlpha && this.alpha > 0){
+           this.alpha--;
+       }
+       
+      if (!this.dibujar && this.alpha > 0) {  
+         this.alpha=  this.alpha-1; // Disminuyo el brightness hasta desaparecer         
+         tint(this.r,this.g,this.b,this.alpha);
+         image(whiteBackground, 0, 0);
+         println("color (h:s:v:) = ("+ this.r+":" + this.g+":"+this.b +") " + this.nombre);
+      } else if (this.alpha > 0) {       
+         tint(this.r,this.g,this.b,this.alpha);
+         image(whiteBackground, 0, 0);
+         println("color (h:s:v:) = ("+ this.r+":" + this.g+":"+this.b +") " + this.nombre);
+      }
+      
+   }
+   
+   /*void buildColor() {
      this.h =  random(360);
      this.v = random(100);
      println("color (h:s:v:) = ("+ this.h+":" + this.s+":"+this.v+")");
-   }
+   }*/
  
 };
 
