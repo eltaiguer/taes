@@ -1,116 +1,104 @@
-ColorDisplay colores;
-PImage whiteBackground; 
-ColorDisplay c2,c3;
+/* OpenProcessing Tweak of *@*http://www.openprocessing.org/sketch/157678*@* */
+/* !do not delete the line above, required for linking your tweak if you upload again */
+PGraphics pg1, pg2, pg3; 
+color c1, c2, c3;
+int bgColor = 360;
+int counter = 0;
+
+ArrayList<taesColor> colorArray = new ArrayList<taesColor>();
 
 void setup() {
-  size(1024,768);
-  frameRate(30);
- // smooth();
-  //colorMode(HSB, 360, 100, 100);
-  colorMode(RGB,255,255,255);
-  blendMode(ADD);
+  size(300, 300); 
+  noStroke(); 
+  smooth(); 
+  frameRate(200); 
+  colorMode(HSB, 360, 100, 100);
  
-  whiteBackground = loadImage("white.png");
-  
-  colores = new ColorDisplay("rojo", 255, 0, 0 ,128);
-  c2 = new ColorDisplay("azul",0,0,255,128);
-  c3 = new ColorDisplay("verde",0,255,0,128);
- 
-  
-};
+  colorArray.add(new taesColor(0,100.0,100.0,0,0, 5));
+}
 
 void draw() {
-  //noTint();
-  //image(whiteBackground, 0, 0);
- // background(255);
-  colores.display();
-  c2.display();  
- // c3.display();
- 
-}
-
-
-void mousePressed() {  
-   //Selecciona un color
-   //colores.buildColor();
-  //pinta la pantalla 
-  // colores.display();
+  background(bgColor);
   
+  taesColor tc = colorArray.get(0); 
+  for (int i = 0; i < colorArray.size(); i = i+1) {
+    taesColor tc_tmp = colorArray.get(i);
+    tc_tmp.display();
+    tc.blend(tc_tmp.getGraphics());
+  }
+
+  image(tc.getGraphics(),0,0);
 }
 
-void keyPressed(){
-    if (keyCode == LEFT) {
-       colores.noDibujar();
-     //  c2.noDibujar();
-      // c3.noDibujar();
-     } else if (keyCode == RIGHT) {
-       colores.siDibujar();
-       //c2.siDibujar();
-       //c3.siDibujar();
-     }
-     
-     
+void mouseReleased(){
+  if (counter == 0){
+    colorArray.add(new taesColor(0,100,100, 30, 0, 5));
+  }else if (counter == 1){
+    colorArray.add(new taesColor(240,100,100, 60, 0, 5));
+  }else if (counter == 2){
+    colorArray.add(new taesColor(120,100,100, 90, 0, 5));
+  }
+  counter++;
 }
 
-class ColorDisplay {
-   
-   float r;
-   float g;
-   float b;
-   float alpha;
-   boolean dibujar;
-   String nombre;
-   boolean aumentarAlpha;
-   boolean disminuirAlpha;
-   ColorDisplay(String nombre,float r,float g,float b, float alpha) {
-     this.r = r;
-     this.g = g;
-     this.b = b;
-     this.alpha = alpha;
-     this.nombre = nombre;    
-     this.dibujar = true;
-     this.aumentarAlpha = false;
-     this.disminuirAlpha = false;
-   } 
-   
-   void noDibujar() {
-     this.dibujar = false;
-     this.aumentarAlpha = false;
-     this.disminuirAlpha = true;
-   }
-   
-   void siDibujar() {
-     this.dibujar = true;
-     aumentarAlpha = true;
-     disminuirAlpha = false;
-   }
-   
-   void display(){
-       if (this.aumentarAlpha){
-         this.alpha = (this.alpha + 1) % 128;
-       } else if (this.disminuirAlpha && this.alpha > 0){
-           this.alpha--;
-       }
-       
-      if (!this.dibujar && this.alpha > 0) {  
-         this.alpha=  this.alpha-1; // Disminuyo el brightness hasta desaparecer         
-         tint(this.r,this.g,this.b,this.alpha);
-         image(whiteBackground, 0, 0);
-         println("color (h:s:v:) = ("+ this.r+":" + this.g+":"+this.b +") " + this.nombre);
-      } else if (this.alpha > 0) {       
-         tint(this.r,this.g,this.b,this.alpha);
-         image(whiteBackground, 0, 0);
-         println("color (h:s:v:) = ("+ this.r+":" + this.g+":"+this.b +") " + this.nombre);
-      }
-      
-   }
-   
-   /*void buildColor() {
-     this.h =  random(360);
-     this.v = random(100);
-     println("color (h:s:v:) = ("+ this.h+":" + this.s+":"+this.v+")");
-   }*/
- 
-};
+void keyReleased(){
+  if(key == 'b' || key == 'B'){
+    colorArray.remove(colorArray.size()-1);
+    counter--;
+  }
+  
+  if(keyCode == LEFT){
+    taesColor c = colorArray.get(0);
+    println("HUE", hue(c.col));
+    println("SAT", saturation(c.col));
+    println("VAL", brightness(c.col));
+  }
+  
+  if(keyCode == UP){
+    taesColor c = colorArray.get(3);
+    c.col = color(hue(c.col), saturation(c.col), (brightness(c.col) < 100) ? brightness(c.col) + 10 : brightness(c.col));
+  }
+  
+  if(keyCode == DOWN){
+    taesColor c = colorArray.get(3);
+    c.removeByBrightness();
+  }
+}
 
+class taesColor {
+  color col;
+  PGraphics cg;
+  float x,y;
+  float step;
+  
+  taesColor(float h, float s, float v, float x, float y, float step){
+    this.col = color(h, s, v);
+    this.cg = createGraphics(width, height);
+    this.x = x;
+    this.y = y;
+    this.step = step;
+  }
+  
+  PGraphics getGraphics(){
+    return this.cg;
+  }
+  
+  void blend(PGraphics t){
+    this.cg.blend(t, 0, 0, width, height, 0, 0, width, height, EXCLUSION); 
+  }
+  
+  void removeByBrightness(){
+    this.col = color(hue(this.col), saturation(this.col), (brightness(this.col) > this.step) ? brightness(this.col) - this.step : brightness(this.col));
+  }
+  
+  void display(){
+    this.cg.beginDraw(); 
+      this.cg.background(0, 0);
+      this.cg.noStroke();
+      this.cg.smooth(); 
+      this.cg.fill(this.col);
+      this.cg.ellipse(this.x, this.y, 300-this.x, 300-this.y);
+    this.cg.endDraw(); 
+  }
+}
 
