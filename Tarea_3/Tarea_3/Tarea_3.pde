@@ -58,11 +58,9 @@ void draw() {
         note.state = 2;
         note.octave = octave*12;
         myBus.sendNoteOn(channel, note.basePitch + note.octave, velocity); // Send a Midi noteOn
-       // println(note.basePitch + note.octave);
-        
         
         println("NoteON para " + note.basePitch + note.octave);
-        colorArray.add(new TaesColor(note.noteColor,100,100, 0, 0, 5, note.basePitch + note.octave));
+        colorArray.add(new TaesColor(note.noteColor ,100 , 50, 0, 0, 5, note.basePitch + note.octave));
         
 
         println("Tamano colorArray " + colorArray.size());
@@ -74,8 +72,17 @@ void draw() {
         
         if(colorArray.size()>1){
           for (int j=1; j<colorArray.size(); j++){
+            
+            // Una vez que se va a eliminar el color
+            // Se setea en modo preparingToRemove
+            // Así la función display de TaesColor remueve el brillo
+            // del color hasta llegar a 0
+            // en ese momento el color se remueve de la lista de colores para blendear
             if (colorArray.get(j).clave == note.basePitch + note.octave){
-              colorArray.remove(j);
+              colorArray.get(j).preparingToRemove();
+              if (colorArray.get(j).readyToRemove){
+                colorArray.remove(j);
+              }
             }
           }
         }
