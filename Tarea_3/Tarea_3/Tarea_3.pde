@@ -31,7 +31,7 @@ void setup() {
   smooth();  
   colorMode(HSB, 360, 100, 100);
  
-  colorArray.add(new TaesColor(0,100.0,100.0,0,0, 5));
+  colorArray.add(new TaesColor(0.0, 0.0, 0.0, 0,0, 5, 0));
 
   for (int i=0; i<cantKeys; i++){
     keyPress[i] = new Note(notes[i], colors[i]);    
@@ -42,7 +42,7 @@ void setup() {
 
   MidiBus.list(); // List all available Midi devices on STDOUT. This will show each device's index and name.
 
-  myBus = new MidiBus(this, 10, 12); // Create a new MidiBus using the device index to select the Midi input and output devices respectively.
+  myBus = new MidiBus(this, 0, 0); // Create a new MidiBus using the device index to select the Midi input and output devices respectively.
 
 }
 
@@ -61,25 +61,36 @@ void draw() {
        // println(note.basePitch + note.octave);
         
         
+        println("NoteON para " + note.basePitch + note.octave);
+        colorArray.add(new TaesColor(note.noteColor,100,100, 0, 0, 5, note.basePitch + note.octave));
         
-        colorArray.add(new TaesColor(note.noteColor,100,100, 0, 0, 5));
-        
-        println("color: " + colors[i]);
+
+        println("Tamano colorArray " + colorArray.size());
       }
       else if (note.state==0){
         
         myBus.sendNoteOff(channel, note.basePitch + note.octave, velocity);
-        if (colorArray.size()>i+1){
-           println("coloroff: " + colors[i]);
-           for(int christian = 0; christian < colorArray.size(); christian++){
-             println("hue " + (hue(colorArray.get(christian).col)));
-             println("notecolor " + note.noteColor);
-             if (hue(colorArray.get(christian).col) == note.noteColor){
-               colorArray.remove(christian);
-               break;
-             }    
-           }           
+        println("NoteOFF para " + note.basePitch + note.octave);
+        
+        if(colorArray.size()>1){
+          for (int j=1; j<colorArray.size(); j++){
+            if (colorArray.get(j).clave == note.basePitch + note.octave){
+              colorArray.remove(j);
+            }
+          }
         }
+        
+        //        if (colorArray.size()>i+1){
+        //           println("coloroff: " + colors[i]);
+        //           for(int christian = 0; christian < colorArray.size(); christian++){
+        //             println("hue " + (hue(colorArray.get(christian).col)));
+        //             println("notecolor " + note.noteColor);
+        //             if (hue(colorArray.get(christian).col) == note.noteColor){
+        //               colorArray.remove(christian);
+        //               break;
+        //             }    
+        //           }           
+        //        }
       }
     }
    

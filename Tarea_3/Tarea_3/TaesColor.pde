@@ -3,13 +3,15 @@ class TaesColor {
   PGraphics cg;
   float x,y;
   float step;
+  Integer clave;
   
-  TaesColor(float h, float s, float v, float x, float y, float step){
+  TaesColor(float h, float s, float v, float x, float y, float step, Integer clave){
     this.col = color(h, s, v);
     this.cg = createGraphics(width, height);
     this.x = x;
     this.y = y;
     this.step = step;
+    this.clave = clave;
   }
   
   PGraphics getGraphics(){
