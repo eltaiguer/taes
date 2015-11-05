@@ -34,7 +34,7 @@ void setup() {
   colorArray.add(new TaesColor(0,100.0,100.0,0,0, 5));
 
   for (int i=0; i<cantKeys; i++){
-    keyPress[i] = new Note(notes[i]);
+    keyPress[i] = new Note(notes[i], colors[i]);    
   }
 
  
@@ -51,24 +51,35 @@ void draw() {
    for (int i=0; i < cantKeys; i++){
      
      Note note = keyPress[i];
-     
+     //println("note "+ i +" state: "+ note.state);
       if (note.state == 1){
-        
+
         int octave = int(map(mouseY, 0, height, 5, -5));          
         note.state = 2;
         note.octave = octave*12;
         myBus.sendNoteOn(channel, note.basePitch + note.octave, velocity); // Send a Midi noteOn
-        println(note.basePitch + note.octave);
+       // println(note.basePitch + note.octave);
         
         
         
-        colorArray.add(new TaesColor(colors[i],100,100, 0, 0, 5));
+        colorArray.add(new TaesColor(note.noteColor,100,100, 0, 0, 5));
         
-        
+        println("color: " + colors[i]);
       }
       else if (note.state==0){
+        
         myBus.sendNoteOff(channel, note.basePitch + note.octave, velocity);
-        colorArray.remove(i+1);
+        if (colorArray.size()>i+1){
+           println("coloroff: " + colors[i]);
+           for(int christian = 0; christian < colorArray.size(); christian++){
+             println("hue " + (hue(colorArray.get(christian).col)));
+             println("notecolor " + note.noteColor);
+             if (hue(colorArray.get(christian).col) == note.noteColor){
+               colorArray.remove(christian);
+               break;
+             }    
+           }           
+        }
       }
     }
    
@@ -121,7 +132,7 @@ void delay(int time) {
 
 void keyPressed(){
   
-  println(keyCode + " pressed");
+ // println(keyCode + " pressed");
   if ((keyCode == 87) && (keyPress[W].state == 0)){
     keyPress[W].state = 1;
   }
@@ -161,7 +172,7 @@ void keyPressed(){
 }
 
 void keyReleased(){
-  println(keyCode + " released");
+  //println(keyCode + " released");
   switch  (keyCode) {
   case 87:  keyPress[W].state = 0;
             break;
