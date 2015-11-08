@@ -1,8 +1,10 @@
+import SimpleOpenNI.*;
+
 import themidibus.*;
 MidiBus myBus;
-int cantKeys = 8;
+int cantKeys = 10;
 
-final int W = 0;
+final int W = 0; 
 final int A = 1;
 final int S = 2;
 final int D = 3;
@@ -15,9 +17,13 @@ final int ARROW_DOWN = 9;
 final int ARROW_LEFT = 10;
 
 Note[] keyPress = new Note [cantKeys];
+//             C   D   D#  E   F   F#  G   G#  A   B   Db
+int[] notes = {60, 62, 63, 64, 65, 66, 67, 68, 69, 71, 72};
 
-int[] notes = {60, 62, 64, 65, 67, 69, 71, 72};
-float[] colors = {0, 30, 60, 90, 120, 150, 240, 300};
+//float[] colors = {0, 30, 60, 90, 120, 150, 240, 300, 360};
+
+//                C     D     D#   E     F    F#  G   G#  A   B   Db
+float[] colors = {120, 180, 210, 240, 270, 300, 330, 0, 30, 90, 120};
 
 int channel = 0;
 int velocity = 127;
@@ -26,7 +32,32 @@ int bgColor = 360;
 
 ArrayList<TaesColor> colorArray = new ArrayList<TaesColor>();
 
+SimpleOpenNI context;
+
+PVector rightHand   = new PVector();
+PVector rightHand2d = new PVector();
+
+PVector leftHand   = new PVector();
+PVector leftHand2d = new PVector();
+
 void setup() {
+  
+//  context = new SimpleOpenNI(this);
+//  if(context.isInit() == false)
+//  {
+//     println("Can't init SimpleOpenNI, maybe the camera is not connected!");
+//     exit();
+//     return;
+//  }
+//
+//  //---------------------------
+//  // enable depthMap generation
+//  context.enableDepth();
+//
+//  //--------------------------------------------
+//  // enable skeleton generation for all joints
+//  context.enableUser();
+  
   size(400, 400);
   smooth();  
   colorMode(HSB, 360, 100, 100);
@@ -42,25 +73,51 @@ void setup() {
 
   MidiBus.list(); // List all available Midi devices on STDOUT. This will show each device's index and name.
 
-  myBus = new MidiBus(this, 0, 0); // Create a new MidiBus using the device index to select the Midi input and output devices respectively.
+  myBus = new MidiBus(this, 10, 12); // Create a new MidiBus using the device index to select the Midi input and output devices respectively.
 
 }
 
-void draw() {
+int henderzweinOctavator(PVector leftHand, PVector rightHand){
 
+//    float val = rightHand.y + leftHand.y;
+//    println(val);
+//    return int(map(val,0,960,5,-5));
+
+    float val = abs(rightHand.y - leftHand.y);
+    println(val);
+    return int(map(val,0,240,5,-5));
+}
+
+void draw() {
+  // context.update();
+   
+//    // Get right hand
+//      context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_HAND, rightHand);
+//      context.convertRealWorldToProjective(rightHand, rightHand2d);
+//
+//      // Get left hand
+//      context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HAND, leftHand);
+//      context.convertRealWorldToProjective(leftHand, leftHand2d);
+      
+      
+      int octave = int(map(mouseY, 0, 800, 5, -5));
+   // int octave = henderzweinOctavator(leftHand2d, rightHand2d);
+  //  println("octave : " + octave); 
+   
    for (int i=0; i < cantKeys; i++){
      
      Note note = keyPress[i];
      //println("note "+ i +" state: "+ note.state);
       if (note.state == 1){
 
-        int octave = int(map(mouseY, 0, height, 5, -5));          
+               
         note.state = 2;
         note.octave = octave*12;
         myBus.sendNoteOn(channel, note.basePitch + note.octave, velocity); // Send a Midi noteOn
-        
+         if (i==A){
         println("NoteON para " + note.basePitch + note.octave);
-        colorArray.add(new TaesColor(note.noteColor ,100 , 50, 0, 0, 5, note.basePitch + note.octave));
+         }
+        colorArray.add(new TaesColor(note.noteColor, 100, 50, 0, 0, 5, note.basePitch + note.octave));
         
 
         println("Tamano colorArray " + colorArray.size());
@@ -68,7 +125,9 @@ void draw() {
       else if (note.state==0){
         
         myBus.sendNoteOff(channel, note.basePitch + note.octave, velocity);
+        if (i==A){
         println("NoteOFF para " + note.basePitch + note.octave);
+        }
         
         if(colorArray.size()>1){
           for (int j=1; j<colorArray.size(); j++){
@@ -85,19 +144,7 @@ void draw() {
               }
             }
           }
-        }
-        
-        //        if (colorArray.size()>i+1){
-        //           println("coloroff: " + colors[i]);
-        //           for(int christian = 0; christian < colorArray.size(); christian++){
-        //             println("hue " + (hue(colorArray.get(christian).col)));
-        //             println("notecolor " + note.noteColor);
-        //             if (hue(colorArray.get(christian).col) == note.noteColor){
-        //               colorArray.remove(christian);
-        //               break;
-        //             }    
-        //           }           
-        //        }
+        }    
       }
     }
    
@@ -182,6 +229,12 @@ void keyPressed(){
   if ((keyCode == 38) && (keyPress[ARROW_UP].state == 0)){
     keyPress[ARROW_UP].state = 1;
   }
+
+  if ((keyCode == 39) && (keyPress[ARROW_RIGHT].state == 0)){
+    keyPress[ARROW_RIGHT].state = 1;
+  }
+  
+  
   
   if (keyCode==89){  
     println("PERO TE FUISTE DEL ARREI ÑERY!!");          
@@ -208,8 +261,15 @@ void keyReleased(){
             break;
   case 38:  keyPress[ARROW_UP].state = 0;
             break;
+            case 39:  keyPress[ARROW_RIGHT].state = 0;
+            break;
   default:  println("PERO TE FUISTE DEL ARREI ÑERY!!");
             break;
   }
 
+}
+
+void onNewUser(SimpleOpenNI curContext, int userId){
+  println("onNewUser - userId: " + userId);
+  curContext.startTrackingSkeleton(userId);
 }
