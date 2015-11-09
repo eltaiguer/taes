@@ -3,11 +3,11 @@ class TaesColor {
   PGraphics cg;
   float x,y;
   float step;
-  Integer clave;
+  int clave;
   boolean removing = false;
   boolean readyToRemove = false;
   
-  TaesColor(float h, float s, float v, float x, float y, float step, Integer clave){
+  TaesColor(float h, float s, float v, float x, float y, float step, int clave){
     this.col = color(h, s, v);
     this.cg = createGraphics(width, height);
     this.x = x;
@@ -32,13 +32,15 @@ class TaesColor {
   
   void display(){
     
+    float bright = brightness(this.col);
+    
     if (removing){
-      this.col = color(hue(this.col), saturation(this.col), (brightness(this.col) > 0) ? brightness(this.col)-1 : brightness(this.col));
-      if (brightness(this.col) == 0){
+      this.col = color(hue(this.col), saturation(this.col), bright > 0 ? bright-1 : bright);
+      if (bright <= 0){
         this.readyToRemove = true;
       }
     }else{
-      this.col = color(hue(this.col), saturation(this.col), (brightness(this.col) < 100) ? brightness(this.col)+1 : brightness(this.col));
+      this.col = color(hue(this.col), saturation(this.col), bright < 100 ? bright+1 : bright);
     }
     
     this.cg.beginDraw(); 
