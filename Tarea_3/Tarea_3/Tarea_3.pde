@@ -23,7 +23,7 @@ int[] notes = {60, 62, 63, 64, 65, 66, 67, 68, 69, 71, 72};
 //float[] colors = {0, 30, 60, 90, 120, 150, 240, 300, 360};
 
 //                C     D     D#   E     F    F#  G   G#  A   B   Db
-float[] colors = {120, 180, 210, 240, 270, 300, 330, 0, 30, 90, 120};
+float[] colors = {120, 180, 210, 240, 270, 300, 330, 0, 30, 90, 121};
 
 int channel = 0;
 int velocity = 127;
@@ -124,6 +124,8 @@ void draw() {
       }
       else if (note.state==0){
         
+        note.state = -1;
+        
         myBus.sendNoteOff(channel, note.basePitch + note.octave, velocity);
         if (i==A){
         println("NoteOFF para " + note.basePitch + note.octave);
@@ -138,11 +140,16 @@ void draw() {
             // del color hasta llegar a 0
             // en ese momento el color se remueve de la lista de colores para blendear
             if (colorArray.get(j).clave == note.basePitch + note.octave){
+              println("preparing to remove");
               colorArray.get(j).preparingToRemove();
-              if (colorArray.get(j).readyToRemove){
+              
+             //  if (colorArray.get(j).readyToRemove){
+                println("remove");
                 colorArray.remove(j);
-              }
+             // }
+              
             }
+           
           }
         }    
       }
@@ -198,39 +205,39 @@ void delay(int time) {
 void keyPressed(){
   
  // println(keyCode + " pressed");
-  if ((keyCode == 87) && (keyPress[W].state == 0)){
+  if ((keyCode == 87) && ((keyPress[W].state == 0) || (keyPress[W].state == -1))){
     keyPress[W].state = 1;
   }
   
-  if ((keyCode == 65) && (keyPress[A].state == 0)){
+  if ((keyCode == 65) && ((keyPress[A].state == 0) || (keyPress[A].state == -1))){
     keyPress[A].state = 1;
   }
   
-  if ((keyCode == 83) && (keyPress[S].state == 0)){
+  if ((keyCode == 83) && ((keyPress[S].state == 0) || (keyPress[S].state == -1))){
     keyPress[S].state = 1;
   }
   
-  if ((keyCode == 68) && (keyPress[D].state == 0)){
+  if ((keyCode == 68) && ((keyPress[D].state == 0) || (keyPress[D].state == -1))){
     keyPress[D].state = 1;
   }
   
-  if ((keyCode == 70) && (keyPress[F].state == 0)){
+  if ((keyCode == 70) && ((keyPress[F].state == 0) || (keyPress[F].state == -1))){
     keyPress[F].state = 1;
   }
   
-  if ((keyCode == 71) && (keyPress[G].state == 0)){
+  if ((keyCode == 71) && ((keyPress[G].state == 0) || (keyPress[G].state == -1))){
     keyPress[G].state = 1;
   }
   
-  if ((keyCode == 32) && (keyPress[SPACE].state == 0)){
+  if ((keyCode == 32) && ((keyPress[SPACE].state == 0) || (keyPress[SPACE].state == -1))){
     keyPress[SPACE].state = 1;
   }
   
-  if ((keyCode == 38) && (keyPress[ARROW_UP].state == 0)){
+  if ((keyCode == 38) && ((keyPress[ARROW_UP].state == 0) || (keyPress[ARROW_UP].state == -1))){
     keyPress[ARROW_UP].state = 1;
   }
 
-  if ((keyCode == 39) && (keyPress[ARROW_RIGHT].state == 0)){
+  if ((keyCode == 39) && ((keyPress[ARROW_RIGHT].state == 0) || (keyPress[ARROW_RIGHT].state == -1))){
     keyPress[ARROW_RIGHT].state = 1;
   }
   
