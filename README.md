@@ -30,3 +30,13 @@ Para su desarrollo se utilizaron las siguientes herramientas:
 * [Processing](https://processing.org/)
 * [SimpleOpenNI](https://code.google.com/p/simple-openni/)
 * [ControlP5](http://www.sojamo.de/libraries/controlP5/)
+
+#### Tarea 3 - Macrochip - Diccionario ####
+Macrochip es un prototipo de instalación interactiva que permite la generación de música a través de la danza, mediante la interacción con un piso compuesto por formas geométricas con capacidades conductivas.
+
+Para su desarrollo se utilizaron las siguientes herramientas:
+* [Processing](https://processing.org/)
+* [SimpleOpenNI](https://code.google.com/p/simple-openni/)
+* [TheMidiBus](http://www.smallbutdigital.com/themidibus.php)
+* [Ableton Live](https://www.ableton.com/en/live/)
+* [MakeyMakey](http://www.makeymakey.com/)
