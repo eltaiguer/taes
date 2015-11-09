@@ -17,12 +17,12 @@ final int ARROW_DOWN = 9;
 final int ARROW_LEFT = 10;
 
 Note[] keyPress = new Note [cantKeys];
-//             C   D   D#  E   F   F#  G   G#  A   B   Db
+//             C   D   D#  E   F   F#  G   G#  A   B   C
 int[] notes = {60, 62, 63, 64, 65, 66, 67, 68, 69, 71, 72};
 
 //float[] colors = {0, 30, 60, 90, 120, 150, 240, 300, 360};
 
-//                C     D     D#   E     F    F#  G   G#  A   B   Db
+//                C     D     D#   E     F    F#  G   G#  A   B   C
 float[] colors = {120, 180, 210, 240, 270, 300, 330, 0, 30, 90, 121};
 
 int channel = 0;
@@ -73,7 +73,7 @@ void setup() {
 
   MidiBus.list(); // List all available Midi devices on STDOUT. This will show each device's index and name.
 
-  myBus = new MidiBus(this, 10, 12); // Create a new MidiBus using the device index to select the Midi input and output devices respectively.
+  myBus = new MidiBus(this, 0, 1); // Create a new MidiBus using the device index to select the Midi input and output devices respectively.
 
 }
 
@@ -100,7 +100,8 @@ void draw() {
 //      context.convertRealWorldToProjective(leftHand, leftHand2d);
       
       
-      int octave = int(map(mouseY, 0, 800, 5, -5));
+      //int octave = int(map(mouseY, 0, 800, 5, -5));
+      int octave = 0;
    // int octave = henderzweinOctavator(leftHand2d, rightHand2d);
   //  println("octave : " + octave); 
    
@@ -241,6 +242,9 @@ void keyPressed(){
     keyPress[ARROW_RIGHT].state = 1;
   }
   
+  if ((keyCode == 40) && ((keyPress[ARROW_DOWN].state == 0) || (keyPress[ARROW_DOWN].state == -1))){
+    keyPress[ARROW_DOWN].state = 1;
+  }
   
   
   if (keyCode==89){  
@@ -268,7 +272,9 @@ void keyReleased(){
             break;
   case 38:  keyPress[ARROW_UP].state = 0;
             break;
-            case 39:  keyPress[ARROW_RIGHT].state = 0;
+  case 39:  keyPress[ARROW_RIGHT].state = 0;
+            break;
+  case 40:  keyPress[ARROW_DOWN].state = 0;
             break;
   default:  println("PERO TE FUISTE DEL ARREI ÑERY!!");
             break;
