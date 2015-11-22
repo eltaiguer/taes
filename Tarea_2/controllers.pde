@@ -30,6 +30,11 @@ public class ControlFrame extends PApplet {
             .setSize(40, 20)
             .setLabel("Visible");
 
+        cp5.addBang("throwControl")
+            .setPosition(210, 120)
+            .setSize(40, 20)
+            .setLabel("Lanzar");
+
     /*    cp5.addBang("releaseControl")
             .setPosition(210, 120)
             .setSize(40, 20)
@@ -98,6 +103,9 @@ public class ControlFrame extends PApplet {
         } else if (n == "clockControl") {
             clock.visible = !clock.visible;
             println("clock.visible : " + clock.visible);
+        } else if (n == "throwControl") {
+            throwing_clock = true;
+            println("throwing_clock : " + throwing_clock);
         } else if (n == "releaseControl") {
             println("allow_release : " + clock.allow_release);
             clock.allow_release = !clock.allow_release;
@@ -146,7 +154,7 @@ public class ControlFrame extends PApplet {
             camera_context = true;
         } else if (n == "finalSceneControl"){
             fadeOut = true;
-            scene = "finalScene";            
+            scene = "finalScene";
         }
     }
 
