@@ -42,6 +42,7 @@ float RELOJ_INITIAL_Y = 274;
 String INITIAL           = "INITIAL"; // Reloj sin agarrar
 String EN_MANO_IZQUIERDA = "EN_MANO_IZQUIERDA"; // Agarre el reloj
 String OVER              = "OVER"; // Devolvi el reloj
+String LANZANDO          = "LANZANDO"; // Lanzando reloj
 
 //variables controles interfaz
 String scene       = "firstScene";
@@ -54,10 +55,9 @@ boolean do_play        = false;
 boolean record_context = false;
 boolean play_context   = false;
 boolean camera_context = false;
+boolean throwing_clock = false;
 
 boolean fadeOut = true;
-
-
 
 int calib_dist;
 
@@ -99,12 +99,9 @@ void setup() {
     for (int i = 0; i < imagenes.cant_imgs; i++) {
         imagenes.addImagen((i + 1) + ".jpg", i);
     }
-    
-    
 
     // para imagen escalada
     image = new PImage(kWidth, kHeight,ARGB);
-
 
     black = loadImage("black.png");
 
@@ -112,8 +109,8 @@ void setup() {
     context = new SimpleOpenNI(this);
     if(context.isInit() == false){
         println("Can't init SimpleOpenNI, maybe the camera is not connected!");
-        exit();
-        return;
+        //exit();
+        //return;
     }
 
     // enable depthMap generation
@@ -125,22 +122,20 @@ void setup() {
 
 void draw() {
     if (scene == "firstScene") {
-      
-        
+
       if (clock.estado == EN_MANO_IZQUIERDA) {
         image(bgSinClock, 0, 0);
-                
       } else {
-          image(bg, 0, 0);          
-      }    
-        
+          image(bg, 0, 0);
+      }
+
     } else if (scene == "secondScene") {
-        
+
         if (fadeOut && transparency_to_2nd < 50){
          transparency_to_2nd++;
          tint(255,255,255,transparency_to_2nd);
-         image(black, 0, 0);        
-           
+         image(black, 0, 0);
+
        }else{
          fadeOut = false;
           do_record = true;
@@ -150,7 +145,7 @@ void draw() {
            tint(255,255,255,50 - transparency_to_2nd);
          }*/
          tint(255,255,255,255);
-         
+
          imagenes.showCurrentImage(); //muestra la imagen
        }
     } else if (scene == "thirdScene"){
@@ -158,13 +153,13 @@ void draw() {
          transparency_to_3rd++;
          tint(255,255,255,transparency_to_3rd);
        }
-       
+
        image(scene_2_img, 0, 0);
     } else if (scene == "finalScene"){
       if (fadeOut && transparency_to_final < 50){
-        
+
         step++;
-        
+
         if (step > 5){
           transparency_to_final++;
           step = 0;
@@ -172,10 +167,10 @@ void draw() {
          tint(255,255,255,transparency_to_final);
          image(black, 0, 0);
        }
-       
+
     }
-    
-      tint(255,255,255,255);
+
+    tint(255,255,255,255);
     // interaccion con reloj
     if (grab_clock) {
         updateJointsPosition();
@@ -307,8 +302,12 @@ void updateJointsPosition() {
 }
 
 void actualizarPosicionReloj() {
-    clock.x = leftHand2d.x;
-    clock.y = leftHand2d.y;
+    if (!throwing_clock) {
+        clock.x = leftHand2d.x;
+        clock.y = leftHand2d.y;
+    } else {
+        clock.x = clock.x + 25;
+    }
 }
 
 // Roba el reloj de la escena
