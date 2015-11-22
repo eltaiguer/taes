@@ -112,27 +112,21 @@ void draw() {
       note.state = 2;
       note.octave = octave*12;
       myBus.sendNoteOn(channel, note.basePitch + note.octave, velocity); // Send a Midi noteOn
-      colorArray.add(new TaesColor(note.noteColor, 100, 50, 0, 0, 5, note.basePitch + note.octave));
-      println("size colorArray " + colorArray.size());
+      println("add");
+      if (getColor(note.basePitch + note.octave) == -1){
+        colorArray.add(new TaesColor(note.noteColor, 100, 50, 0, 0, 5, note.basePitch + note.octave));
+        println("size colorArray " + colorArray.size());
+      }
     }
-    else if (note.state==0){
-
+    else if (note.state == 0){
       note.state = -1;
       myBus.sendNoteOff(channel, note.basePitch + note.octave, velocity);
-
-      if(colorArray.size()>1){
-        for (int j=1; j<colorArray.size(); j++){
-          // Una vez que se va a eliminar el color
-          // Se setea en modo preparingToRemove
-          // Así la función display de TaesColor remueve el brillo
-          // del color hasta llegar a 0
-          // en ese momento el color se remueve de la lista de colores para blendear
-          if (colorArray.get(j).clave == note.basePitch + note.octave){
-            println("preparing to remove");
-            colorArray.get(j).preparingToRemove();
-            colorArray.remove(j);
-          }
-        }
+      println("remove");
+      int colorPosition = getColor(note.basePitch + note.octave);
+      if (colorPosition > -1){
+          colorArray.get(colorPosition).preparingToRemove();
+          colorArray.remove(colorPosition);
+          println("size colorArray " + colorArray.size());
       }
     }
   }
@@ -221,8 +215,20 @@ void keyReleased(){
   }
 }
 
-// future kinect integration
-void onNewUser(SimpleOpenNI curContext, int userId){
-  println("onNewUser - userId: " + userId);
-  curContext.startTrackingSkeleton(userId);
+int getColor(int id){
+  println("get color");
+  if(colorArray.size()>1){
+    for (int j=0; j<colorArray.size(); j++){
+      if (colorArray.get(j).clave == id){
+        return j;
+      }
+    }
+  }
+  return -1;
 }
+
+// // future kinect integration
+// void onNewUser(SimpleOpenNI curContext, int userId){
+//   println("onNewUser - userId: " + userId);
+//   curContext.startTrackingSkeleton(userId);
+// }
