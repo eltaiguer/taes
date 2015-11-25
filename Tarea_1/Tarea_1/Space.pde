@@ -15,8 +15,8 @@ class Space implements Scene{
   boolean moon_is_moving = false;
   int moon_width         = 225;
   int moon_height        = 225;
-  int moon_x             = 1025;
-  int moon_y             = 150;
+  int moon_x             = 900;
+  int moon_y             = 130;
   FWorld fworld;
   FCircle fmoon;
   FCircle f_rigth_hand;
