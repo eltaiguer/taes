@@ -94,7 +94,7 @@ class Space implements Scene{
     }
 
     //contacto luna-manos
-    if (f_rigth_hand.isTouchingBody(fmoon) || f_left_hand.isTouchingBody(fmoon)) {
+    if (manager.activate_moon && (f_rigth_hand.isTouchingBody(fmoon) || f_left_hand.isTouchingBody(fmoon))) {
       show_comet = false;
       if (moon_is_moving) {
         fmoon.setStatic(true);

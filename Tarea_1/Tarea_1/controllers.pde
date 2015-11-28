@@ -34,6 +34,12 @@ public class ControlFrame extends PApplet {
       .setLabel("Activar")
       ;
 
+    cp5.addBang("activateMoon")
+        .setPosition(270, 110)
+        .setSize(40, 20)
+        .setLabel("Habilitar luna")
+        ;
+
   /////////////// Transicion 2 Espacio-Cielo /////////////////////////////////
 
     cp5.addBang("bang4")
@@ -90,6 +96,11 @@ public class ControlFrame extends PApplet {
     if( n == "bang3") {
       manager.activate(2);
     }
+
+    if (n == "activateMoon") {
+      manager.activateMoon();
+    }
+
     // Transicion 2 Espacio-Cielo
     if( n == "bang4") {
       manager.activate(3);
