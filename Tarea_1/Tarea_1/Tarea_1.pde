@@ -56,11 +56,11 @@ void setup() {
 
   // cosas kinect
   context = new SimpleOpenNI(this);
-  if (context.isInit() == false) {
+  /*if (context.isInit() == false) {
     println("Can't init SimpleOpenNI, maybe the camera is not connected!");
     exit();
     return;
-  }
+  }*/
 
   frameRate(30);
   smooth();

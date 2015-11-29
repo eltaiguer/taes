@@ -14,7 +14,7 @@ class BedSpaceTransition implements Scene{
 
   void initialScene(){
     w2=width2/2;
-    h2= height2/2;
+    h2= height2/2 + 300;
     d2 = dist(0, 0, w2, h2);
     noStroke();
     timer = new Timer();
