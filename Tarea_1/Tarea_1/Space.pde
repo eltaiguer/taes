@@ -15,8 +15,8 @@ class Space implements Scene{
   boolean moon_is_moving = false;
   int moon_width         = 225;
   int moon_height        = 225;
-  int moon_x             = 1025;
-  int moon_y             = 150;
+  int moon_x             = 900;
+  int moon_y             = 130;
   FWorld fworld;
   FCircle fmoon;
   FCircle f_rigth_hand;
@@ -94,7 +94,7 @@ class Space implements Scene{
     }
 
     //contacto luna-manos
-    if (f_rigth_hand.isTouchingBody(fmoon) || f_left_hand.isTouchingBody(fmoon)) {
+    if (manager.activate_moon && (f_rigth_hand.isTouchingBody(fmoon) || f_left_hand.isTouchingBody(fmoon))) {
       show_comet = false;
       if (moon_is_moving) {
         fmoon.setStatic(true);

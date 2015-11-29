@@ -29,7 +29,7 @@ class Sky implements Scene{
 
     // Se cargan las imagenes de las nubes
     cloud1 = loadImage("cloud0.png");
-    cloud1.resize(400,300);
+    cloud1.resize(600,400);
 
     // Se cargan los caramelos
     candy0 = loadImage("candy0.png");
@@ -48,8 +48,8 @@ class Sky implements Scene{
     candy4.resize(60,60);
 
     // Se crea y configura un FBox para contener a la nube
-    cloudBox = new FBox(200, 10);
-    cloudBox.setPosition(400, 800);
+    cloudBox = new FBox(500, 10);
+    cloudBox.setPosition(400, 750);
     cloudBox.attachImage(cloud1);
     cloudBox.setStatic(true);
     world.add(cloudBox);
@@ -108,7 +108,7 @@ class Sky implements Scene{
   // Actualiza la posicion de la nube para que siga al bailarin
   void updateCloudPosition(){
     if (!Float.isNaN(com2d.x)){
-      cloudBox.setPosition(map(com2d.x, 0, kWidth, 0, width), 800);
+      cloudBox.setPosition(map(com2d.x, 0, kWidth, 0, width), 750);
     }
   }
 }

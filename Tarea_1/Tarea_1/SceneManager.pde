@@ -3,6 +3,7 @@ class SceneManager{
   Scene[] scenes;
   Scene actualScene;
   int actualSceneNr;
+  boolean activate_moon;
 
   SceneManager(){
 
@@ -21,6 +22,7 @@ class SceneManager{
     actualSceneNr = 0;
     scenes[0].initialScene();
     actualScene = scenes[0];
+    activate_moon = false;
   }
 
   void activateNextScene(){
@@ -43,6 +45,11 @@ class SceneManager{
     actualScene.initialScene();
     println(sceneNr,actualScene.getSceneName());
     stopDraw = false;
+  }
+
+  void activateMoon() {
+      activate_moon = !activate_moon;
+      println("activate_moon: " + activate_moon);
   }
 }
 
